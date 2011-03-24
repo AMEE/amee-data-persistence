@@ -1,0 +1,1 @@
+require 'amee-data-persistence'
