@@ -2,6 +2,8 @@ require 'rubygems'
 require 'spec'
 require 'rspec_spinner'
 
+RAILS_ROOT = '.'
+
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'amee-data-persistence'
 
