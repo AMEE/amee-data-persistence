@@ -2,6 +2,13 @@ require 'singleton'
 
 module AMEE
   module Db
+    
+    # A singleton class for configuration. Automatically initialised on first use
+    # Use like so:
+    # AMEE::Db::Config.instance.store_everything?
+    
+    # Separated into BaseConfig and Config to allow unit testing of singleton.
+    
     class BaseConfig
     
       def initialize
