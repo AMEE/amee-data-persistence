@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
   s.authors = ["James Smith", "Andrew Berkeley"]
   s.files = FileList.new('lib/**/*.rb')
   s.files += ['init.rb', 'rails/init.rb']
+  s.add_dependency("amee-data-abstraction")
 end
