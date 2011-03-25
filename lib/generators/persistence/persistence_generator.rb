@@ -9,6 +9,9 @@ class PersistenceGenerator < Rails::Generator::Base
       m.template File.join("config","persistence.yml.erb"), 
                  File.join("config","persistence.yml"), 
                  :assigns => {:method => method}
+     # Create migration
+     m.template File.join("db","migrations","migration.rb.erb"), 
+                File.join("db","migrations","migration.rb")
     end
   end
 end
