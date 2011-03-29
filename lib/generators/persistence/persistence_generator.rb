@@ -9,9 +9,11 @@ class PersistenceGenerator < Rails::Generator::Base
       m.template File.join("config","persistence.yml.erb"), 
                  File.join("config","persistence.yml"), 
                  :assigns => {:method => method}
-     # Create migration
-     m.template File.join("db","migrations","001_create_tables.rb"),
-                File.join("db","migrations","#{Time.now.strftime("%Y%m%d%I%M%S")}_create_tables.rb")
+      # Check db/migrate exists
+      m.directory File.join("db/migrate")
+      # Create migration
+      m.template File.join("db","migrate","001_create_tables.rb"),
+                 File.join("db","migrate","#{Time.now.strftime("%Y%m%d%I%M%S")}_create_tables.rb")
     end
   end
 end

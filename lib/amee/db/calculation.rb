@@ -2,23 +2,29 @@ module AMEE
   module Db
     class Calculation < ActiveRecord::Base
 
-      has_many :terms
-      validates_presence_of :profile_item_uid, :calculation_type
-      validates_format_of   :profile_item_uid, :with => /\A([A-Z0-9]{12})\z/
-      validates_format_of   :profile_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true
+      has_many :terms, :class_name => "AMEE::Db::Term"
+      validates_presence_of :calculation_type
+      validates_format_of   :profile_item_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
+      validates_format_of   :profile_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
 
       # Bespoke update method handling both attributes of self and associated
       # terms
       def update_calculation!(options)
-        options.each_pair do |attribute,value|
-          if is_calculation_attribute?(attribute)
-            update_calculation_attribute!(attribute,value)
-          else 
-            add_or_update_term!(attribute,value)
+        calculation_attributes.keys.each do |attr|
+          if options.keys.include? attr.to_sym
+            update_calculation_attribute!(attr,options.delete(attr.to_sym))
           end
+        end
+        options.each_pair do |attribute,value|
+          add_or_update_term!(attribute,value)
         end
         delete_unspecified_terms(options)
         reload
+      end
+
+      # Convenience method for accessing calcualtion type as the canonical symbol
+      def type
+        calculation_type.to_sym
       end
 
       # Returns the subset of all instance attributes which represent those passed
@@ -36,7 +42,7 @@ module AMEE
       # use attr_accessor (via #send) method rather than #update_attribute so that
       # validations are performed
       def update_calculation_attribute!(key,value)
-        send("#{key}=", value)
+        send("#{key}=", (value.nil? ? nil : value.to_s))
         raise InvalidRecord, "Calculation record invalid" unless save!
       end
 
@@ -53,10 +59,15 @@ module AMEE
 
       # Covert record to hash. Only the data explicitly passed in are included, i.e.
       # those added by ActiveRecord (created, updated, id) are ignored.
+      #
+      # Always return calculation_type as a symbol
+      #
       def to_hash
         hash = {}
         terms.each { |term| hash.merge!(term.to_hash) }
-        calculation_attributes.each { |key,value| hash[key.to_sym] = self.send key.to_sym }
+        [ :profile_item_uid, :profile_uid ].each do |attr|
+          hash[attr] = self.send(attr)
+        end
         return hash
       end
 

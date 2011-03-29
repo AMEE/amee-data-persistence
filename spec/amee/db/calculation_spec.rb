@@ -23,9 +23,9 @@ describe Calculation do
       @calculation.should be_valid
     end
 
-    it "should not be valid without profile item uid" do
+    it "should be valid without profile item uid" do
       @calculation = Calculation.new @attr.merge(:profile_item_uid => "")
-      @calculation.should_not be_valid
+      @calculation.should be_valid
     end
 
     it "should not be valid without calculation type" do
@@ -91,29 +91,26 @@ describe Calculation do
     it "should update primary attributes" do
       @calculation.profile_item_uid.should == "G8T8E8SHSH46"
       @calculation.profile_uid.should == nil
-      @calculation.update_calculation! :profile_uid => "ASD603SHSHFD", :profile_item_uid => "ASN603DHSREW"
+      @calculation.update_calculation!(:profile_uid => "ASD603SHSHFD", :profile_item_uid => "ASN603DHSREW")
       @calculation.profile_item_uid.should == "ASN603DHSREW"
       @calculation.profile_uid.should == "ASD603SHSHFD"
     end
 
-    it "should reject removal of profile item uid" do
+    it "should allow removal of profile item uid" do
       @calculation.profile_item_uid.should == "G8T8E8SHSH46"
       @calculation.profile_uid.should == nil
-      lambda{
-        @calculation.update_calculation!(
-          :profile_uid => "ASD603SHSHFD",
-          :profile_item_uid => nil)
-        }.should raise_error
+      @calculation.update_calculation!(:profile_uid => "ASD603SHSHFD", :profile_item_uid => nil)
+      @calculation.profile_item_uid.should == nil
     end
 
     it "should update associated terms" do
       @calculation.to_hash.should == { :profile_item_uid => "G8T8E8SHSH46",
-                                       :calculation_type => :cement,
                                        :profile_uid => nil }
+      @calculation.type.should == :cement
       @calculation.update_calculation! valid_term_attributes
       hash = @calculation.to_hash
       hash.keys.map!(&:to_s).sort!.should == [ :type, :process, :profile_item_uid, :mass, :co2, :ch4,
-                            :calculation_type, :section, :profile_uid].map!(&:to_s).sort!
+                                               :section, :profile_uid].map!(&:to_s).sort!
       hash[:co2].class.should == Quantity
       hash[:co2].value.should == 1234.5
       hash[:co2].unit.name.should == 'kilogram'
@@ -126,24 +123,27 @@ describe Calculation do
       hash[:process].should == 'calcination'
       hash[:type].should == 'limestone'
       hash[:section].should == 'facility'
+      @calculation.type.should == :cement
     end
 
     it "should update associated terms, removing unspecified terms" do
       @calculation.to_hash.should == { :profile_item_uid => "G8T8E8SHSH46",
-                                       :calculation_type => :cement,
                                        :profile_uid => nil }
+      @calculation.type.should == :cement
       @calculation.update_calculation! valid_term_attributes
       hash = @calculation.to_hash
       hash.keys.map!(&:to_s).sort!.should == [ :type, :process, :profile_item_uid, :mass, :co2, :ch4,
-                                               :calculation_type, :section, :profile_uid].map!(&:to_s).sort!
+                                               :section, :profile_uid].map!(&:to_s).sort!
       hash[:type].should == 'limestone'
+      @calculation.type.should == :cement
       @calculation.update_calculation! :type => 'dolomite', :process => 'calcination', :section => 'facility'
       hash = @calculation.to_hash
       hash.keys.map!(&:to_s).sort!.should == [ :type, :process, :profile_item_uid,
-                                               :calculation_type, :section, :profile_uid].map!(&:to_s).sort!
+                                               :section, :profile_uid].map!(&:to_s).sort!
       hash[:process].should == 'calcination'
       hash[:type].should == 'dolomite'
       hash[:section].should == 'facility'
+      @calculation.type.should == :cement
     end
 
   end

@@ -2,10 +2,11 @@ module AMEE
   module DataAbstraction
     module PersistenceSupport
       
-      def save!
+      def save
         puts 'saving to persistence layer'
-        record = AMEE::Db::Calculation.find_or_initialize_by_profile_item_uid(self.profile_item_uid)
-        record.update_calculation!(self.to_hash)
+        record = AMEE::Db::Calculation.find_or_initialize_by_profile_item_uid(contents[:profile_item_uid])
+        record.update_calculation!(contents.merge(:calculation_type => label))
+        #false
       end
       
       def self.included(base)
@@ -21,7 +22,7 @@ module AMEE
           puts 'finding things from persistence layer'
 
           if calc_from_db = AMEE::Db::Calculation.find(ordinality, options = {})
-            calc = Calculations[calc_from_db.calculation_type].begin_calcuation
+            calc = Calculations.calculations[calc_from_db.type].begin_calculation
     		    calc.choose!(calc_from_db.to_hash)
     		    return calc
           end
