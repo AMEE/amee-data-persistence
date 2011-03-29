@@ -28,9 +28,9 @@ describe Term do
       @term.should_not be_valid
     end
 
-    it "should be invalid without value" do
+    it "should be valid without value" do
       @term = Term.new @attr.merge(:value => nil)
-      @term.should_not be_valid
+      @term.should be_valid
     end
 
     it "should be invalid without calculation id" do
