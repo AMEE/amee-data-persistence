@@ -1,8 +1,12 @@
 require 'rubygems'
 require 'spec'
 require 'rspec_spinner'
+require 'yaml'
 
 RAILS_ROOT = '.'
+
+DB_CONFIG = YAML.load_file(File.dirname(__FILE__) + '/database.yml')
+DB_MIGRATION = File.join(File.dirname(__FILE__), '..','lib','generators','persistence','templates','db','migrations')
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'amee-data-persistence'
