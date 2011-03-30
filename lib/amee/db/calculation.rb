@@ -12,9 +12,10 @@ module AMEE
       def update_calculation!(options)
         calculation_attributes.keys.each do |attr|
           if options.keys.include? attr.to_sym
-            update_calculation_attribute!(attr,options.delete(attr.to_sym))
+            update_calculation_attribute!(attr,options.delete(attr.to_sym),false)
           end
         end
+        save!
         options.each_pair do |attribute,value|
           add_or_update_term!(attribute,value)
         end
@@ -41,9 +42,9 @@ module AMEE
 
       # use attr_accessor (via #send) method rather than #update_attribute so that
       # validations are performed
-      def update_calculation_attribute!(key,value)
+      def update_calculation_attribute!(key,value,save=true)
         send("#{key}=", (value.nil? ? nil : value.to_s))
-        save!
+        save! if save
       end
 
       def add_or_update_term!(label,value)

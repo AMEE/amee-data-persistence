@@ -9,7 +9,7 @@ module AMEE
       end
 
       def to_hash
-        hash = {}
+        hash = ActiveSupport::OrderedHash.new
         hash[:calculation_type] = label
         hash[:profile_item_uid] = send :profile_item_uid
         hash[:profile_uid] = send :profile_uid
@@ -30,13 +30,19 @@ module AMEE
           end
 
           puts 'finding things from persistence layer'
-
-          if calc_from_db = AMEE::Db::Calculation.find(ordinality, options = {})
-            calc = Calculations.calculations[calc_from_db.type].begin_calculation
-    		    calc.choose!(calc_from_db.to_hash)
+          calcs_from_db = AMEE::Db::Calculation.find(ordinality, options)
+          return nil unless calcs_from_db
+          if ordinality==:first
+            calc = Calculations.calculations[calcs_from_db.type].begin_calculation
+    		    calc.choose!(calcs_from_db.to_hash)
     		    return calc
+          else
+            calcs_from_db.compact.map{|calc_from_db|
+              calc = Calculations.calculations[calc_from_db.type].begin_calculation
+    		      calc.choose!(calc_from_db.to_hash)
+              calc
+            }
           end
-          return nil
         end
       end
 
