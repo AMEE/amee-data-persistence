@@ -2,7 +2,7 @@ module AMEE
   module Db
     class Calculation < ActiveRecord::Base
 
-      has_many :terms, :class_name => "AMEE::Db::Term"
+      has_many :terms, :class_name => "AMEE::Db::Term", :dependent => :destroy
       validates_presence_of :calculation_type
       validates_format_of   :profile_item_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
       validates_format_of   :profile_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
@@ -22,7 +22,7 @@ module AMEE
         reload
       end
 
-      # Convenience method for accessing calcualtion type as the canonical symbol
+      # Convenience method for accessing calculation type as the canonical symbol
       def type
         calculation_type.to_sym
       end
@@ -43,7 +43,7 @@ module AMEE
       # validations are performed
       def update_calculation_attribute!(key,value)
         send("#{key}=", (value.nil? ? nil : value.to_s))
-        raise InvalidRecord, "Calculation record invalid" unless save!
+        save!
       end
 
       def add_or_update_term!(label,value)
