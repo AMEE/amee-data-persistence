@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = "amee-data-persistence"
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.date = "2011-03-24"
   s.summary = ""
   s.email = "james@floppy.org.uk"
@@ -11,5 +11,8 @@ Gem::Specification.new do |s|
   s.authors = ["James Smith", "Andrew Berkeley"]
   s.files = ::FileList.new('lib/**/*.rb')
   s.files += ['init.rb', 'rails/init.rb']
+  s.files += ::FileList.new('spec/**/*.rb')
+  s.files += ['spec/spec_helper.rb', 'spec/database.log',
+              'spec/database.yml', 'spec/spec.opts']
   s.add_dependency("amee-data-abstraction")
 end

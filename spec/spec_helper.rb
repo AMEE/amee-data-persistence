@@ -2,6 +2,9 @@ require 'rubygems'
 require 'spec'
 require 'rspec_spinner'
 require 'yaml'
+require 'logger'
+gem 'amee-data-abstraction'
+require 'amee-data-abstraction'
 
 RAILS_ROOT = '.'
 
@@ -10,10 +13,74 @@ DB_MIGRATION = File.join(File.dirname(__FILE__), '..','lib','generators','persis
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'amee-data-persistence'
+require 'amee/data_abstraction/persistence_support'
+
+ActiveRecord::Base.logger = Logger.new(File.open('database.log', 'a'))
+AMEE::DataAbstraction::OngoingCalculation.class_eval { include AMEE::DataAbstraction::PersistenceSupport }
+
+ActiveRecord::Base.establish_connection(DB_CONFIG)
+ActiveRecord::Migrator.up(DB_MIGRATION)
 
 Spec::Runner.configure do |config|
   config.mock_with :flexmock
 end
+
+def yaml_load_mock(method)
+  flexmock(YAML) do |mock|
+    mock.should_receive(:load_file).and_return('method' => method.to_s)
+  end
+end
+
+def choose_mock
+  selection_mock = flexmock "selection"
+  selection_mock.should_receive(:selections).and_return({"country"=>"Argentina"})
+
+  drill = AMEE::Data::DrillDown
+  drill_mock = flexmock(drill)
+  drill_mock.should_receive(:get).and_return(selection_mock)
+end
+
+def populate_db
+  calculation_one = { :calculation_type => :electricity, :profile_item_uid => "J38DY57SK591",
+                      :country => 'Argentina', :usage => "6000", :co2 => "1200" }
+
+  calculation_two = { :calculation_type => :electricity, :profile_item_uid => "CJ49FFU37DIW",
+                      :country => 'Argentina', :usage => "250", :co2 => "23000" }
+
+  calculation_three = { :calculation_type => :electricity, :profile_item_uid => "K588DH47SMN5",
+                        :profile_uid => "H9KJ49FKIWO5", :country => 'Argentina', :usage => "12345",
+                        :co2 => "1.2" }
+
+  [ calculation_one, calculation_two, calculation_three ].each do |attr|
+    AMEE::Db::Calculation.new { |calc| calc.update_calculation! attr }
+  end
+end
+
+def initialize_calculation_set
+  eval "Calculations = AMEE::DataAbstraction::CalculationSet.new {
+      calculation{
+        name 'Electricity'
+        label :electricity
+        path '/business/energy/electricity/grid'
+        drill {
+          label :country
+          path 'country'
+          fixed 'Argentina'
+        }
+        profile {
+          label :usage
+          name 'Electricity Used'
+          path 'energyPerTime'
+        }
+        output {
+          label :co2
+          name 'Carbon Dioxide'
+          path :default
+        }
+      }
+    }"
+end
+
 
 # Stub activerecord for rails tests
 # Taken from http://muness.blogspot.com/2006/12/unit-testing-rails-activerecord-classes.html

@@ -5,14 +5,18 @@ include AMEE::Db
 describe Term do
 
   before(:all) do
-    ActiveRecord::Base.establish_connection(DB_CONFIG)
-    ActiveRecord::Migrator.up(DB_MIGRATION)
+    Calculation.create :calculation_type => :electricity
+  end
+
+  after(:all) do
+    Calculation.delete_all
+    Term.delete_all
   end
 
   describe "new term" do
 
-    valid_term_attributes = { :label => 'type',
-                              :value => 'petrol',
+    valid_term_attributes = { :label => 'co2',
+                              :value => 120.kg,
                               :calculation_id => '1' }
     before(:all) do
       @attr = valid_term_attributes
@@ -44,14 +48,14 @@ describe Term do
     end
 
     it "should create a new term from quantity onject" do
-      @term = Term.create @attr.merge :value => 25.metres
+      @term = Term.create @attr.merge :value => 25.cubic_metres
       @term.is_a?(Term).should be_true
-      @term.value.should == '25.0 m'
+      @term.value.should == '25.0 m^3'
     end
 
     it "should return attribute" do
       @term = Term.create @attr
-      @term.value.should == 'petrol'
+      @term.value.should == '120.0 kg'
     end
 
   end
