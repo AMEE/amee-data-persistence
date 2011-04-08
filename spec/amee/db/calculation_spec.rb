@@ -5,11 +5,10 @@ include AMEE::Db
 describe Calculation do
 
   valid_calculation_attributes = { :profile_item_uid => "G8T8E8SHSH46",
-                                   :calculation_type => :cement }
-  
-  before(:all) do
-    ActiveRecord::Base.establish_connection(DB_CONFIG)
-    ActiveRecord::Migrator.up(DB_MIGRATION)
+                                   :calculation_type => :electricity }
+
+  after(:all) do
+    Calculation.delete_all
   end
 
   describe "new calculation" do
@@ -68,21 +67,22 @@ describe Calculation do
       @calculation.is_a?(Calculation).should be_true
     end
 
-    it "should return attribute" do
-      @calculation = Calculation.create @attr
-      @calculation.calculation_type.should == :cement
+    it "should save calculation type as string" do
+      @calculation = Calculation.create! @attr
+      @calculation.reload
+      @calculation.calculation_type.should == 'electricity'
+      @calculation.calculation_type.class.should == String
+      @calculation.type.should == :electricity
+      @calculation.type.class.should == Symbol
     end
 
   end
 
   describe "updating calculation" do
 
-    valid_term_attributes = { :type => 'limestone',
-                              :process => 'calcination',
-                              :mass => '500 t',
-                              :co2 => "1234.5 kg",
-                              :ch4 => "12.3 kg",
-                              :section => 'facility' }
+    valid_term_attributes = { :country => 'Argentina',
+                              :usage => '500 kWh',
+                              :co2 => "1234.5 kg", }
 
     before(:each) do
       @calculation = Calculation.create valid_calculation_attributes
@@ -96,6 +96,22 @@ describe Calculation do
       @calculation.profile_uid.should == "ASD603SHSHFD"
     end
 
+    it "should not matter which order attributes updated" do
+      @calculation.profile_item_uid.should == "G8T8E8SHSH46"
+      @calculation.update_calculation!(:profile_uid => "ASD603SHSHFD",
+                                       :calculation_type => :energy,
+                                       :profile_item_uid => "ASN603DHSREW")
+      @calculation.profile_item_uid.should == "ASN603DHSREW"
+      @calculation.profile_uid.should == "ASD603SHSHFD"
+      @calculation.type.should == :energy
+      @calculation.update_calculation!(:profile_uid => nil,
+                                       :profile_item_uid => "ASN603DHSREW",
+                                       :calculation_type => :electricity)
+      @calculation.profile_item_uid.should == "ASN603DHSREW"
+      @calculation.profile_uid.should == nil
+      @calculation.type.should == :electricity
+    end
+
     it "should allow removal of profile item uid" do
       @calculation.profile_item_uid.should == "G8T8E8SHSH46"
       @calculation.profile_uid.should == nil
@@ -106,47 +122,55 @@ describe Calculation do
     it "should update associated terms" do
       @calculation.to_hash.should == { :profile_item_uid => "G8T8E8SHSH46",
                                        :profile_uid => nil }
-      @calculation.type.should == :cement
-      @calculation.update_calculation! valid_term_attributes
+      @calculation.type.should == :electricity
+      @calculation.update_calculation! valid_term_attributes.merge :calculation_type => :power
       hash = @calculation.to_hash
-      hash.keys.map!(&:to_s).sort!.should == [ :type, :process, :profile_item_uid, :mass, :co2, :ch4,
-                                               :section, :profile_uid].map!(&:to_s).sort!
+      hash.keys.map!(&:to_s).sort!.should == [ :profile_item_uid, :usage, :co2, :country,
+                                               :profile_uid].map!(&:to_s).sort!
       hash[:co2].class.should == Quantity
       hash[:co2].value.should == 1234.5
       hash[:co2].unit.name.should == 'kilogram'
-      hash[:ch4].class.should == Quantity
-      hash[:ch4].value.should == 12.3
-      hash[:ch4].unit.name.should == 'kilogram'
-      hash[:mass].class.should == Quantity
-      hash[:mass].value.should == 500.0
-      hash[:mass].unit.name.should == 'tonne'
-      hash[:process].should == 'calcination'
-      hash[:type].should == 'limestone'
-      hash[:section].should == 'facility'
-      @calculation.type.should == :cement
+      hash[:usage].class.should == Quantity
+      hash[:usage].value.should == 500.0
+      hash[:usage].unit.name.should == 'kilowatt hour'
+      hash[:country].should == 'Argentina'
+      @calculation.calculation_type.should == 'power'
+      @calculation.type.should == :power
+      @calculation.update_calculation! valid_term_attributes.merge :calculation_type => :electricity
+      @calculation.calculation_type.should == 'electricity'
+      @calculation.type.should == :electricity
     end
 
     it "should update associated terms, removing unspecified terms" do
       @calculation.to_hash.should == { :profile_item_uid => "G8T8E8SHSH46",
                                        :profile_uid => nil }
-      @calculation.type.should == :cement
+      @calculation.type.should == :electricity
       @calculation.update_calculation! valid_term_attributes
       hash = @calculation.to_hash
-      hash.keys.map!(&:to_s).sort!.should == [ :type, :process, :profile_item_uid, :mass, :co2, :ch4,
-                                               :section, :profile_uid].map!(&:to_s).sort!
-      hash[:type].should == 'limestone'
-      @calculation.type.should == :cement
-      @calculation.update_calculation! :type => 'dolomite', :process => 'calcination', :section => 'facility'
+      hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :usage, :co2, :country,
+                                              :profile_uid ].map!(&:to_s).sort!
+      @calculation.type.should == :electricity
+      @calculation.update_calculation! :usage => 600000.kWh, :country => 'Argentina'
       hash = @calculation.to_hash
-      hash.keys.map!(&:to_s).sort!.should == [ :type, :process, :profile_item_uid,
-                                               :section, :profile_uid].map!(&:to_s).sort!
-      hash[:process].should == 'calcination'
-      hash[:type].should == 'dolomite'
-      hash[:section].should == 'facility'
-      @calculation.type.should == :cement
+      hash.keys.map!(&:to_s).sort!.should == [ :profile_item_uid, :usage, :country,
+                                              :profile_uid ].map!(&:to_s).sort!
+      hash[:co2].class.should == NilClass
+      hash[:usage].class.should == Quantity
+      hash[:usage].value.should == 600000.0
+      hash[:usage].unit.name.should == 'kilowatt hour'
+      hash[:country].should == 'Argentina'
+      @calculation.type.should == :electricity
+    end
+
+    it "should find by atttribute" do
+      calc = Calculation.find :first, :conditions => {:calculation_type => 'electricity'}
+      calc.class.should == Calculation
+      calc.type.should == :electricity
     end
 
   end
+
+  
   
 end
 
