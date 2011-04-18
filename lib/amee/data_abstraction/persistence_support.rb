@@ -11,6 +11,9 @@ module AMEE
       def save
         record = db_calculation || get_db_calculation
         record.update_calculation!(to_hash)
+        true
+      rescue ActiveRecord::RecordNotSaved
+        false
       end
 
       def delete

@@ -318,6 +318,27 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   end
 
+  describe "saving" do
+    
+    before :each do
+      choose_mock
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
+      yaml_load_mock(:outputs)
+    end
+    
+    it "should return true if successful" do
+      @ongoing_calculation.save.should eql true
+    end
+    
+    it "should return false if unsuccessful" do
+      # Mock to make save fail
+      flexmock(@ongoing_calculation.db_calculation).should_receive(:save!).and_raise(ActiveRecord::RecordNotSaved)
+      # Saving should now return false, propogating errors from AR::Base
+      @ongoing_calculation.save.should eql false
+    end
+    
+  end
+
   describe "deleting calculation" do
 
     before(:all) do
