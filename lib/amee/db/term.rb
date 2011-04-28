@@ -5,29 +5,19 @@ module AMEE
 
       belongs_to :calculation, :class_name => "AMEE::Db::Calculation"
       validates_presence_of :calculation_id, :label
-      before_save :initialize_value
+      before_save :initialize_units
 
-      def update_value!(value)
-        self.value = value
-        save!
-      end
-
-      def initialize_value
-        if value.is_a? Quantify::Quantity
-          self.value = value.to_s(:label)
-        else
-          self.value = value.to_s
-        end
-      end
-      
-      def value_or_quantity_object
-        Quantify::Quantity.parse value
-      rescue Quantify::QuantityParseError
-        value
+      def initialize_units
+        self.unit = unit.label if unit
+        self.per_unit = per_unit.label if per_unit
       end
 
       def to_hash
-        { label.to_sym => value_or_quantity_object }
+        sub_hash = {}
+        sub_hash[:value] = value
+        sub_hash[:unit] = Unit.for(unit) if unit
+        sub_hash[:per_unit] = Unit.for(per_unit) if per_unit
+        { label.to_sym => sub_hash }
       end
 
     end

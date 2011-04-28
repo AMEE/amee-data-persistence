@@ -27,9 +27,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should be_nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2].should == "1200"
-      hash[:country].should == 'Argentina'
-      hash[:usage].should == "6000"
+      hash[:co2][:value].should == "1200"
+      hash[:country][:value].should == 'Argentina'
+      hash[:usage][:value].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should be_nil
     end
@@ -41,9 +41,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should be_nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2].should == "1200"
-      hash[:country].should == 'Argentina'
-      hash[:usage].should == "6000"
+      hash[:co2][:value].should == "1200"
+      hash[:country][:value].should == 'Argentina'
+      hash[:usage][:value].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should be_nil
     end
@@ -55,9 +55,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should be_nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2].should == "1200"
-      hash[:country].should == 'Argentina'
-      hash[:usage].should == "6000"
+      hash[:co2][:value].should == "1200"
+      hash[:country][:value].should == 'Argentina'
+      hash[:usage][:value].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should be_nil
     end
@@ -69,9 +69,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "K588DH47SMN5"
       @ongoing_calculation.profile_uid.should == "H9KJ49FKIWO5"
       hash = @ongoing_calculation.to_hash
-      hash[:co2].should == "1.2"
-      hash[:country].should == 'Argentina'
-      hash[:usage].should == "12345"
+      hash[:co2][:value].should == "1.2"
+      hash[:country][:value].should == 'Argentina'
+      hash[:usage][:value].should == "12345"
       hash[:profile_item_uid].should == "K588DH47SMN5"
       hash[:profile_uid].should == "H9KJ49FKIWO5"
     end
@@ -84,9 +84,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
         on_calc.is_a?(AMEE::DataAbstraction::OngoingCalculation).should be_true
         on_calc.profile_item_uid.should_not be_nil
         hash = on_calc.to_hash
-        hash[:co2].should_not be_nil
-        hash[:country].should == 'Argentina'
-        hash[:usage].should_not be_nil
+        hash[:co2][:value].should_not be_nil
+        hash[:country][:value].should == 'Argentina'
+        hash[:usage][:value].should_not be_nil
       end
     end
 
@@ -97,9 +97,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should == nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2].should == "1200"
-      hash[:country].should == 'Argentina'
-      hash[:usage].should == "6000"
+      hash[:co2][:value].should == "1200"
+      hash[:country][:value].should == 'Argentina'
+      hash[:usage][:value].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should == nil
     end
@@ -112,16 +112,16 @@ describe AMEE::DataAbstraction::OngoingCalculation do
         on_calc.is_a?(AMEE::DataAbstraction::OngoingCalculation).should be_true
         on_calc.profile_item_uid.should_not be_nil
         hash = on_calc.to_hash
-        hash[:co2].should_not be_nil
-        hash[:country].should == 'Argentina'
-        hash[:usage].should_not be_nil
+        hash[:co2][:value].should_not be_nil
+        hash[:country][:value].should == 'Argentina'
+        hash[:usage][:value].should_not be_nil
       end
     end
 
     it "should instantiate record at ongoing calc #db_calculation attribute" do
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
       @ongoing_calculation.label.should == :electricity
-      @ongoing_calculation.to_hash[:co2].should == "1200"
+      @ongoing_calculation.to_hash[:co2][:value].should == "1200"
       @ongoing_calculation.db_calculation.is_a?(AMEE::Db::Calculation).should be_true
       @ongoing_calculation.db_calculation.id.should == @reference
     end
@@ -183,8 +183,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       # show that db record has values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2].should == "1200"
-      record.to_hash[:usage].should == "6000"
+      record.to_hash[:co2][:value].should == "1200"
+      record.to_hash[:usage][:value].should == "6000"
       # wipe terms from db record by updating with nothing
       record.update_calculation!(options={})
       # show that db record contains no terms
@@ -194,8 +194,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       record = @ongoing_calculation.db_calculation
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2].should == "1200"
-      record.to_hash[:usage].should == "6000"
+      record.to_hash[:co2][:value].should == "1200"
+      record.to_hash[:usage][:value].should == "6000"
     end
 
   end
@@ -247,8 +247,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       # show that db record has values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2].should == "1200"
-      record.to_hash[:usage].should == "6000"
+      record.to_hash[:co2][:value].should == "1200"
+      record.to_hash[:usage][:value].should == "6000"
       # show that db record contains no terms after save
       @ongoing_calculation.save
       record = @ongoing_calculation.db_calculation
@@ -306,13 +306,13 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       # show that db record has all values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2].should == "1200"
-      record.to_hash[:usage].should == "6000"
+      record.to_hash[:co2][:value].should == "1200"
+      record.to_hash[:usage][:value].should == "6000"
       # show that db record contains only output terms after save
       @ongoing_calculation.save
       record = @ongoing_calculation.db_calculation
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2 ].map!(&:to_s).sort!
-      record.to_hash[:co2].should == "1200"
+      record.to_hash[:co2][:value].should == "1200"
       record.to_hash[:usage].should == nil
     end
 

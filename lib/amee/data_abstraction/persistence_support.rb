@@ -37,7 +37,11 @@ module AMEE
         hash[:profile_item_uid] = send :profile_item_uid
         hash[:profile_uid] = send :profile_uid
         (representation == :full ? terms : stored_terms ).each do |term|
-          hash[term.label.to_sym] = (term.unit.nil? ? term.value : "#{term.value} #{term.unit}")
+          sub_hash = {}
+          sub_hash[:value] = term.value
+          sub_hash[:unit] = term.unit if term.unit
+          sub_hash[:per_unit] = term.per_unit if term.per_unit
+          hash[term.label.to_sym] = sub_hash
         end
         return hash
       end

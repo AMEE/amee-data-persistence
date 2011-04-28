@@ -53,9 +53,9 @@ module AMEE
         save! if save
       end
 
-      def add_or_update_term!(label,value)
+      def add_or_update_term!(label,data)
         term = Term.find_or_initialize_by_calculation_id_and_label(id,label.to_s)
-        term.update_value!(value)
+        term.update_attributes!(data)
       end
 
       def delete_unspecified_terms(options)

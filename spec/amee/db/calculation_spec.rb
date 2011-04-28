@@ -80,9 +80,9 @@ describe Calculation do
 
   describe "updating calculation" do
 
-    valid_term_attributes = { :country => 'Argentina',
-                              :usage => '500 kWh',
-                              :co2 => "1234.5 kg", }
+    valid_term_attributes = { :country => {:value => 'Argentina'},
+                              :usage => {:value => 500, :unit => Unit.kWh},
+                              :co2 => {:value => 1234.5, :unit => Unit.kg} }
 
     before(:each) do
       @calculation = Calculation.create valid_calculation_attributes
@@ -127,18 +127,18 @@ describe Calculation do
       hash = @calculation.to_hash
       hash.keys.map!(&:to_s).sort!.should == [ :profile_item_uid, :usage, :co2, :country,
                                                :profile_uid].map!(&:to_s).sort!
-      hash[:co2].class.should == Quantity
-      hash[:co2].value.should == 1234.5
-      hash[:co2].unit.name.should == 'kilogram'
-      hash[:usage].class.should == Quantity
-      hash[:usage].value.should == 500.0
-      hash[:usage].unit.name.should == 'kilowatt hour'
-      hash[:country].should == 'Argentina'
-      @calculation.calculation_type.should == 'power'
-      @calculation.type.should == :power
+      hash[:co2][:unit].should be_a Quantify::Unit::SI
+      hash[:co2][:value].should eql "1234.5"
+      hash[:co2][:unit].name.should eql 'kilogram'
+      hash[:usage][:unit].should be_a Quantify::Unit::NonSI
+      hash[:usage][:value].should eql "500"
+      hash[:usage][:unit].name.should eql 'kilowatt hour'
+      hash[:country][:value].should eql 'Argentina'
+      @calculation.calculation_type.should eql 'power'
+      @calculation.type.should eql :power
       @calculation.update_calculation! valid_term_attributes.merge :calculation_type => :electricity
-      @calculation.calculation_type.should == 'electricity'
-      @calculation.type.should == :electricity
+      @calculation.calculation_type.should eql 'electricity'
+      @calculation.type.should eql :electricity
     end
 
     it "should update associated terms, removing unspecified terms" do
@@ -150,15 +150,15 @@ describe Calculation do
       hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :usage, :co2, :country,
                                               :profile_uid ].map!(&:to_s).sort!
       @calculation.type.should == :electricity
-      @calculation.update_calculation! :usage => 600000.kWh, :country => 'Argentina'
+      @calculation.update_calculation! :usage => {:value => 600000, :unit => Unit.kWh}, :country => {:value =>'Argentina'}
       hash = @calculation.to_hash
       hash.keys.map!(&:to_s).sort!.should == [ :profile_item_uid, :usage, :country,
                                               :profile_uid ].map!(&:to_s).sort!
-      hash[:co2].class.should == NilClass
-      hash[:usage].class.should == Quantity
-      hash[:usage].value.should == 600000.0
-      hash[:usage].unit.name.should == 'kilowatt hour'
-      hash[:country].should == 'Argentina'
+      hash[:co2].should be_a NilClass
+      hash[:usage][:unit].should be_a Quantify::Unit::NonSI
+      hash[:usage][:value].should == "600000"
+      hash[:usage][:unit].name.should == 'kilowatt hour'
+      hash[:country][:value].should == 'Argentina'
       @calculation.type.should == :electricity
     end
 

@@ -1,5 +1,5 @@
 require 'rubygems'
-gem 'activerecord', "~> 2.3.5"
+gem 'activerecord', "~> 2.3.9"
 require 'active_record'
 require 'quantify'
 
