@@ -134,6 +134,11 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.db_calculation.id.should == @reference
     end
 
+    it "should find assocaited db instance by id" do
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
+      @ongoing_calculation.id.should == @reference
+    end
+
   end
 
   describe "when storage method is :everything" do

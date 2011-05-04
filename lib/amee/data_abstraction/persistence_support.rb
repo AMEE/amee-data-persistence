@@ -7,6 +7,8 @@ module AMEE
       end
 
       attr_accessor :db_calculation
+
+      delegate :id,:to=>:db_calculation
       
       def save
         validate!
