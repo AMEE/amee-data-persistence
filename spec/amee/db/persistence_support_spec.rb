@@ -139,6 +139,11 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.id.should == @reference
     end
 
+    it "should give nil id, if not saved" do
+      Calculations[:electricity].begin_calculation.db_calculation.should be_nil
+      Calculations[:electricity].begin_calculation.id.should be_nil
+    end
+
   end
 
   describe "when storage method is :everything" do
