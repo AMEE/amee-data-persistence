@@ -52,20 +52,15 @@ module AMEE
 
       module ClassMethods
 
-        def find(ordinality, options = {})
-          unless [:all, :first].include? ordinality
-            raise ArgumentError.new("First argument should be :all or :first") 
-          end
-
-          result = AMEE::Db::Calculation.find(ordinality, options)
+        def find(*args)
+          result = AMEE::Db::Calculation.find(*args)
           return nil unless result
-
-          if ordinality==:first
-            initialize_from_db_record(result)
-          else
+          if result.respond_to?(:map)
             result.compact.map do |calc|
               initialize_from_db_record(calc)
             end
+          else
+            initialize_from_db_record(result)
           end
         end
 

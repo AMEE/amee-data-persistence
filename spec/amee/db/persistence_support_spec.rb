@@ -135,9 +135,10 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should find assocaited db instance by id" do
-      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find @reference
       @ongoing_calculation.id.should == @reference
     end
+
 
     it "should give nil id, if not saved" do
       Calculations[:electricity].begin_calculation.db_calculation.should be_nil
