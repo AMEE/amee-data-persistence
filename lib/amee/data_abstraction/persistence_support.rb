@@ -7,10 +7,18 @@ module AMEE
       end
 
       attr_accessor :db_calculation
+
+      def id
+        db_calculation.nil? ? nil : db_calculation.id
+      end
       
       def save
+        validate!
         record = db_calculation || get_db_calculation
         record.update_calculation!(to_hash)
+        true
+      rescue ActiveRecord::RecordNotSaved
+        false
       end
 
       def delete
@@ -48,20 +56,15 @@ module AMEE
 
       module ClassMethods
 
-        def find(ordinality, options = {})
-          unless [:all, :first].include? ordinality
-            raise ArgumentError.new("First argument should be :all or :first") 
-          end
-
-          result = AMEE::Db::Calculation.find(ordinality, options)
+        def find(*args)
+          result = AMEE::Db::Calculation.find(*args)
           return nil unless result
-
-          if ordinality==:first
-            initialize_from_db_record(result)
-          else
+          if result.respond_to?(:map)
             result.compact.map do |calc|
               initialize_from_db_record(calc)
             end
+          else
+            initialize_from_db_record(result)
           end
         end
 
@@ -75,7 +78,8 @@ module AMEE
           end
           calc = Calculations.calculations[record.type].begin_calculation
           calc.db_calculation = record
-    		  calc.choose!(record.to_hash)
+          # Means that validation needs to occur before calcs are saved
+    		  calc.choose_without_validation!(record.to_hash)
           return calc
         end
 

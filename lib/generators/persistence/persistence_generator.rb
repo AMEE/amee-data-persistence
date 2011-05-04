@@ -1,5 +1,5 @@
 class PersistenceGenerator < Rails::Generator::Base
-  def manifest # this method is default entrance of generator
+  def manifest # this method is the default entry point
     record do |m|
       # Get method from command line - default is metadata
       method = args[0] || 'metadata'

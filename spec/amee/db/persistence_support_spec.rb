@@ -134,11 +134,22 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.db_calculation.id.should == @reference
     end
 
+    it "should find assocaited db instance by id" do
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find @reference
+      @ongoing_calculation.id.should == @reference
+    end
+
+
+    it "should give nil id, if not saved" do
+      Calculations[:electricity].begin_calculation.db_calculation.should be_nil
+      Calculations[:electricity].begin_calculation.id.should be_nil
+    end
+
   end
 
   describe "when storage method is :everything" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
@@ -202,7 +213,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :metadata" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
@@ -261,7 +272,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :outputs" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
@@ -316,6 +327,27 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       record.to_hash[:usage].should == nil
     end
 
+  end
+
+  describe "saving" do
+    
+    before :each do
+      choose_mock
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
+      yaml_load_mock(:outputs)
+    end
+    
+    it "should return true if successful" do
+      @ongoing_calculation.save.should eql true
+    end
+    
+    it "should return false if unsuccessful" do
+      # Mock to make save fail
+      flexmock(@ongoing_calculation.db_calculation).should_receive(:save!).and_raise(ActiveRecord::RecordNotSaved)
+      # Saving should now return false, propogating errors from AR::Base
+      @ongoing_calculation.save.should eql false
+    end
+    
   end
 
   describe "deleting calculation" do

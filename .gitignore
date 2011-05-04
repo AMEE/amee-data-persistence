@@ -1,4 +1,6 @@
 /coverage/
 nbproject/*
 *.sqlite3
-database.log
+*database.log
+.gitignore
+*.gem
