@@ -138,7 +138,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :everything" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
@@ -202,7 +202,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :metadata" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
@@ -261,7 +261,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :outputs" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end

@@ -9,6 +9,7 @@ module AMEE
       attr_accessor :db_calculation
       
       def save
+        validate!
         record = db_calculation || get_db_calculation
         record.update_calculation!(to_hash)
         true
@@ -74,7 +75,8 @@ module AMEE
           end
           calc = Calculations.calculations[record.type].begin_calculation
           calc.db_calculation = record
-    		  calc.choose!(record.to_hash)
+          # Means that validation needs to occur before calcs are saved
+    		  calc.choose_without_validation!(record.to_hash)
           return calc
         end
 
