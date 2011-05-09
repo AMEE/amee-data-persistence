@@ -72,6 +72,7 @@ module AMEE
           calc.db_calculation = record
           # Means that validation needs to occur before calcs are saved
     		  calc.choose_without_validation!(record.to_hash)
+          calc.clean! if storage_config.store_everything?
           return calc
         end
 
