@@ -14,7 +14,7 @@ module AMEE
       
       def save
         validate!
-        record = db_calculation || get_db_calculation
+        record = db_calculation || AMEE::Db::Calculation.new
         record.update_calculation!(to_hash)
         true
       rescue ActiveRecord::RecordNotSaved
@@ -25,10 +25,6 @@ module AMEE
         record = db_calculation || get_db_calculation
         self.db_calculation = nil
         AMEE::Db::Calculation.delete record.id
-      end
-
-      def get_db_calculation
-        self.db_calculation = AMEE::Db::Calculation.find_or_initialize_by_profile_item_uid(send :profile_item_uid)
       end
 
       def stored_terms
