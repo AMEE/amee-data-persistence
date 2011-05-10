@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.files = ::FileList.new('lib/**/*.rb')
   s.files += ['init.rb', 'rails/init.rb']
   s.files += ::FileList.new('spec/**/*.rb')
-  #s.files += ['spec/spec_helper.rb','spec/database.yml']
+  s.files += ['spec/spec_helper.rb', 'spec/database.yml', 'spec/spec.opts']
   s.add_dependency("amee-data-abstraction",">= 0.4.4")
 end
