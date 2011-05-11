@@ -4,6 +4,13 @@ module AMEE
 
       def self.included(base)
         base.extend ClassMethods
+        base.class_eval do
+          alias_method :basic_delete_profile_item, :delete_profile_item
+        end
+        base.send :define_method, 'delete_profile_item' do
+          basic_delete_profile_item
+          delete
+        end
       end
 
       attr_accessor :db_calculation
@@ -19,13 +26,6 @@ module AMEE
         true
       rescue ActiveRecord::RecordNotSaved
         false
-      end
-
-      alias_method :basic_delete_profile_item, :delete_profile_item
-
-      def delete_profile_item
-        basic_delete_profile_item
-        delete
       end
 
       def delete
