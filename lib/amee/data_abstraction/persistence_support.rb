@@ -21,6 +21,13 @@ module AMEE
         false
       end
 
+      alias_method :basic_delete_profile_item, :delete_profile_item
+
+      def delete_profile_item
+        basic_delete_profile_item
+        delete
+      end
+
       def delete
         record = db_calculation || get_db_calculation
         self.db_calculation = nil
