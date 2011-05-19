@@ -126,50 +126,52 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.db_calculation.id.should == @reference
     end
 
-    it "should find assocaited db instance by profile item uid" do
-      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
-      @ongoing_calculation.db_calculation = nil
-      @ongoing_calculation.db_calculation.should == nil
-      @ongoing_calculation.get_db_calculation.is_a?(AMEE::Db::Calculation).should be_true
-      @ongoing_calculation.db_calculation.id.should == @reference
+    it "should find assocaited db instance by id" do
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find @reference
+      @ongoing_calculation.id.should == @reference
+    end
+
+
+    it "should give nil id, if not saved" do
+      Calculations[:electricity].begin_calculation.db_calculation.should be_nil
+      Calculations[:electricity].begin_calculation.id.should be_nil
     end
 
   end
 
   describe "when storage method is :everything" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
+      yaml_load_mock(:everything)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
     it "should find storage method" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :everything
     end
 
+    it "should start off clean" do
+      @ongoing_calculation.should_not be_dirty
+    end
+
     it "should establish whether inputs to be stored" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_true
     end
 
     it "should establish whether outputs to be stored" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.store_outputs?.should be_true
     end
 
     it "should establish whether metadata to be stored" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.store_metadata?.should be_true
     end
 
     it "should return array of terms for storing which includes all terms" do
-      yaml_load_mock(:everything)
       @ongoing_calculation.stored_terms.should == @ongoing_calculation.terms
     end
 
     it "should return hash with all terms" do
-      yaml_load_mock(:everything)
       hash = @ongoing_calculation.to_hash
       hash.is_a?(Hash).should be_true
       hash.should == @ongoing_calculation.to_hash(:full)
@@ -178,7 +180,6 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save all terms" do
-      yaml_load_mock(:everything)
       record = @ongoing_calculation.db_calculation
       # show that db record has values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
@@ -202,38 +203,37 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :metadata" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
+      yaml_load_mock(:metadata)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
     it "should find storage method" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :metadata
     end
 
     it "should establish whether inputs to be stored" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_false
     end
 
     it "should establish whether outputs to be stored" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.store_outputs?.should be_false
     end
 
     it "should establish whether metadata to be stored" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.store_metadata?.should be_true
     end
 
+    it "should start off dirty" do
+      @ongoing_calculation.should be_dirty
+    end
+
     it "should return array of terms for storing which includes only metadata" do
-      yaml_load_mock(:metadata)
       @ongoing_calculation.stored_terms.should_not == @ongoing_calculation.terms
     end
 
     it "should return hash with only metadata terms" do
-      yaml_load_mock(:metadata)
       hash = @ongoing_calculation.to_hash
       hash.is_a?(Hash).should be_true
       hash.should_not == @ongoing_calculation.to_hash(:full)
@@ -242,7 +242,6 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save only metadata terms" do
-      yaml_load_mock(:metadata)
       record = @ongoing_calculation.db_calculation
       # show that db record has values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
@@ -261,38 +260,37 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   describe "when storage method is :outputs" do
 
-    before(:all) do
+    before(:each) do
       choose_mock
+      yaml_load_mock(:outputs)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
     it "should find storage method" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :outputs
     end
 
     it "should establish whether inputs to be stored" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_false
     end
 
     it "should establish whether outputs to be stored" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.store_outputs?.should be_true
     end
 
     it "should establish whether metadata to be stored" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.store_metadata?.should be_true
     end
 
+    it "should start off dirty" do
+      @ongoing_calculation.should be_dirty
+    end
+
     it "should return array of terms for storing which includes only outputs and metadata" do
-      yaml_load_mock(:outputs)
       @ongoing_calculation.stored_terms.should_not == @ongoing_calculation.terms
     end
 
     it "should return hash with only output and metadata terms" do
-      yaml_load_mock(:outputs)
       hash = @ongoing_calculation.to_hash
       hash.is_a?(Hash).should be_true
       hash.should_not == @ongoing_calculation.to_hash(:full)
@@ -301,7 +299,6 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save only output terms" do
-      yaml_load_mock(:outputs)
       record = @ongoing_calculation.db_calculation
       # show that db record has all values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
@@ -322,8 +319,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     
     before :each do
       choose_mock
-      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
       yaml_load_mock(:outputs)
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
     
     it "should return true if successful" do
@@ -343,6 +340,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
     before(:all) do
       choose_mock
+      yaml_load_mock(:outputs)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
