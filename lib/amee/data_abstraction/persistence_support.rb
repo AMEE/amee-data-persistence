@@ -49,6 +49,7 @@ module AMEE
       module ClassMethods
 
         def find(*args)
+          args.last[:include] = "terms" if args.last[:joins].present?
           result = AMEE::Db::Calculation.find(*args)
           return nil unless result
           if result.respond_to?(:map)

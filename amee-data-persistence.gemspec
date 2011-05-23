@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = "amee-data-persistence"
-  s.version = '0.2.3'
+  s.version = '0.2.4'
   s.date = "2011-05-05"
   s.summary = ""
   s.email = "james@floppy.org.uk"
