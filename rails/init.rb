@@ -1,3 +1,4 @@
-if defined?(AMEE::DataAbstraction::OngoingCalculation)
-  AMEE::DataAbstraction::OngoingCalculation.class_eval { include AMEE::DataAbstraction::PersistenceSupport }
-end
+require 'amee-data-abstraction'
+require 'amee-data-persistence'
+
+::AMEE::DataAbstraction::OngoingCalculation.class_eval { include ::AMEE::DataAbstraction::PersistenceSupport }

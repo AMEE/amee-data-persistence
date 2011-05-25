@@ -3,7 +3,7 @@ require 'rake'
 Gem::Specification.new do |s|
   s.name = "amee-data-persistence"
   s.version = '0.2.4'
-  s.date = "2011-05-05"
+  s.date = "2011-05-25"
   s.summary = ""
   s.email = "james@floppy.org.uk"
   s.homepage = "http://github.com/AMEE/amee-data-persistence"
