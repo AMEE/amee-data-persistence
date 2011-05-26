@@ -49,7 +49,8 @@ module AMEE
       module ClassMethods
 
         def find(*args)
-          args.last[:include] = "terms" if args.last[:joins].present?
+          raise ActiveRecord::ActiveRecordError.new("Using :include with terms and then conditioning on terms doesn't work due to rails caching.  Use the :joins option instead.") if args.last[:include].to_s.match(/terms/) && args.last[:conditions].to_s.match(/terms/)
+          args.last[:include] = "terms" if args.last[:joins].to_s.match(/terms/)
           result = AMEE::Db::Calculation.find(*args)
           return nil unless result
           if result.respond_to?(:map)
