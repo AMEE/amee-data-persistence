@@ -64,12 +64,11 @@ module AMEE
       module ClassMethods
 
         def find(*args)
+          args.last[:include] = "terms" if args.last.is_a? Hash and args.last[:joins].present?
           result = AMEE::Db::Calculation.find(*args)
           return nil unless result
           if result.respond_to?(:map)
-            result.compact.map do |calc|
-              initialize_from_db_record(calc)
-            end
+            CalculationCollection.new(result.compact.map { |calc| initialize_from_db_record(calc) })
           else
             initialize_from_db_record(result)
           end

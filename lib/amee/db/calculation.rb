@@ -59,7 +59,7 @@ module AMEE
       end
 
       def delete_unspecified_terms(options)
-        terms.reload.each do |term|
+        terms.each do |term|
           Term.delete(term.id) unless options.keys.include? term.label.to_sym
         end
       end
@@ -69,7 +69,7 @@ module AMEE
       #
       def to_hash
         hash = {}
-        terms.reload.each { |term| hash.merge!(term.to_hash) }
+        terms.each { |term| hash.merge!(term.to_hash) }
         [ :profile_item_uid, :profile_uid ].each do |attr|
           hash[attr] = self.send(attr)
         end

@@ -17,6 +17,12 @@ class CreateTables < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :calculations, :calculation_type
+    add_index :calculations, :profile_item_uid
+    add_index :terms, :calculation_id
+    add_index :terms, [:label, :value, :calculation_id], :name => "label_name_calc_id_index"
+    
   end
 
   def self.down

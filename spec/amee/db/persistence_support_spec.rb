@@ -78,7 +78,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
   
     it "should create multiple new ongoing calculations from db record with find" do
       @ongoing_calculations = AMEE::DataAbstraction::OngoingCalculation.find :all
-      @ongoing_calculations.class.should == Array
+      @ongoing_calculations.class.should == AMEE::DataAbstraction::CalculationCollection
       @ongoing_calculations.each do |on_calc|
         on_calc.label.should == :electricity
         on_calc.is_a?(AMEE::DataAbstraction::OngoingCalculation).should be_true
@@ -106,7 +106,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
     it "should create multiple new ongoing calculations from db record with #find_by_type" do
       @ongoing_calculations = AMEE::DataAbstraction::OngoingCalculation.find_by_type :all, :electricity
-      @ongoing_calculations.class.should == Array
+      @ongoing_calculations.class.should == AMEE::DataAbstraction::CalculationCollection
       @ongoing_calculations.each do |on_calc|
         on_calc.label.should == :electricity
         on_calc.is_a?(AMEE::DataAbstraction::OngoingCalculation).should be_true
