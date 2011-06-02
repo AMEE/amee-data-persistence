@@ -128,10 +128,10 @@ describe Calculation do
       hash.keys.map!(&:to_s).sort!.should == [ :profile_item_uid, :usage, :co2, :country,
                                                :profile_uid].map!(&:to_s).sort!
       hash[:co2][:unit].should be_a Quantify::Unit::SI
-      hash[:co2][:value].should eql "1234.5"
+      hash[:co2][:value].should eql 1234.5
       hash[:co2][:unit].name.should eql 'kilogram'
       hash[:usage][:unit].should be_a Quantify::Unit::NonSI
-      hash[:usage][:value].should eql "500"
+      hash[:usage][:value].should eql 500.0
       hash[:usage][:unit].name.should eql 'kilowatt hour'
       hash[:country][:value].should eql 'Argentina'
       @calculation.calculation_type.should eql 'power'
@@ -156,7 +156,7 @@ describe Calculation do
                                               :profile_uid ].map!(&:to_s).sort!
       hash[:co2].should be_a NilClass
       hash[:usage][:unit].should be_a Quantify::Unit::NonSI
-      hash[:usage][:value].should == "600000"
+      hash[:usage][:value].should == 600000
       hash[:usage][:unit].name.should == 'kilowatt hour'
       hash[:country][:value].should == 'Argentina'
       @calculation.type.should == :electricity

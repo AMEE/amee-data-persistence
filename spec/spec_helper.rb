@@ -40,6 +40,12 @@ def choose_mock
   drill_mock.should_receive(:get).and_return(selection_mock)
 end
 
+def delete_mock
+  item = AMEE::Profile::Item
+  drill_mock = flexmock(item)
+  drill_mock.should_receive(:delete).and_return(true)
+end
+
 def populate_db
   calculation_one = { :calculation_type => :electricity, :profile_item_uid => "J38DY57SK591",
                       :country => {:value =>'Argentina'}, 
