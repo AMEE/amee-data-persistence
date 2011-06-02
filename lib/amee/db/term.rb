@@ -12,9 +12,13 @@ module AMEE
         self.per_unit = per_unit.label if per_unit
       end
 
+      # Float method called in order to initialize explicitly numeric values as
+      # numeric objects. This enables numerical operations to be systematically
+      # performed
+      #
       def to_hash
         sub_hash = {}
-        sub_hash[:value] = value
+        sub_hash[:value] = Float(value) rescue value
         sub_hash[:unit] = Unit.for(unit) if unit
         sub_hash[:per_unit] = Unit.for(per_unit) if per_unit
         { label.to_sym => sub_hash }

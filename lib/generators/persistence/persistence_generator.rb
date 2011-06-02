@@ -12,8 +12,8 @@ class PersistenceGenerator < Rails::Generator::Base
       # Check db/migrate exists
       m.directory File.join("db/migrate")
       # Create migration
-      m.template File.join("db","migrate","001_create_tables.rb"),
-                 File.join("db","migrate","#{Time.now.strftime("%Y%m%d%I%M%S")}_create_tables.rb")
+      m.template File.join("db","migrate","001_create_persistence_tables.rb"),
+                 File.join("db","migrate","#{Time.now.strftime("%Y%m%d%I%M%S")}_create_persistence_tables.rb")
     end
   end
 end

@@ -4,13 +4,6 @@ module AMEE
 
       def self.included(base)
         base.extend ClassMethods
-        base.class_eval do
-          alias_method :basic_delete_profile_item, :delete_profile_item
-        end
-        base.send :define_method, 'delete_profile_item' do
-          basic_delete_profile_item
-          delete
-        end
       end
 
       attr_accessor :db_calculation
@@ -30,8 +23,10 @@ module AMEE
 
       def delete
         record = db_calculation || get_db_calculation
-        self.db_calculation = nil
         AMEE::Db::Calculation.delete record.id
+        self.db_calculation = nil
+        # Added deletion of PI in here. Seems sensible to do so.
+        delete_profile_item
       end
 
       def get_db_calculation
@@ -68,6 +63,8 @@ module AMEE
           result = AMEE::Db::Calculation.find(*args)
           return nil unless result
           if result.respond_to?(:map)
+            # CalculationCollection class used to provide reporting functionality to
+            # collections of calculations
             CalculationCollection.new(result.compact.map { |calc| initialize_from_db_record(calc) })
           else
             initialize_from_db_record(result)
