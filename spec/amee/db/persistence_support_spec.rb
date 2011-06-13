@@ -27,9 +27,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should be_nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2][:value].should == 1200.0
-      hash[:country][:value].should == 'Argentina'
-      hash[:usage][:value].should == 6000.0
+      hash[:co2].should == "1200"
+      hash[:country].should == 'Argentina'
+      hash[:usage].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should be_nil
     end
@@ -41,9 +41,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should be_nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2][:value].should == 1200.0
-      hash[:country][:value].should == 'Argentina'
-      hash[:usage][:value].should == 6000.0
+      hash[:co2].should == "1200"
+      hash[:country].should == 'Argentina'
+      hash[:usage].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should be_nil
     end
@@ -55,9 +55,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should be_nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2][:value].should == 1200.0
-      hash[:country][:value].should == 'Argentina'
-      hash[:usage][:value].should == 6000.0
+      hash[:co2].should == "1200"
+      hash[:country].should == 'Argentina'
+      hash[:usage].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should be_nil
     end
@@ -69,24 +69,24 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "K588DH47SMN5"
       @ongoing_calculation.profile_uid.should == "H9KJ49FKIWO5"
       hash = @ongoing_calculation.to_hash
-      hash[:co2][:value].should == 1.2
-      hash[:country][:value].should == 'Argentina'
-      hash[:usage][:value].should == 12345.0
+      hash[:co2].should == "1.2"
+      hash[:country].should == 'Argentina'
+      hash[:usage].should == "12345"
       hash[:profile_item_uid].should == "K588DH47SMN5"
       hash[:profile_uid].should == "H9KJ49FKIWO5"
     end
   
     it "should create multiple new ongoing calculations from db record with find" do
       @ongoing_calculations = AMEE::DataAbstraction::OngoingCalculation.find :all
-      @ongoing_calculations.class.should == AMEE::DataAbstraction::CalculationCollection
+      @ongoing_calculations.class.should == Array
       @ongoing_calculations.each do |on_calc|
         on_calc.label.should == :electricity
         on_calc.is_a?(AMEE::DataAbstraction::OngoingCalculation).should be_true
         on_calc.profile_item_uid.should_not be_nil
         hash = on_calc.to_hash
-        hash[:co2][:value].should_not be_nil
-        hash[:country][:value].should == 'Argentina'
-        hash[:usage][:value].should_not be_nil
+        hash[:co2].should_not be_nil
+        hash[:country].should == 'Argentina'
+        hash[:usage].should_not be_nil
       end
     end
 
@@ -97,40 +97,32 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       @ongoing_calculation.profile_item_uid.should == "J38DY57SK591"
       @ongoing_calculation.profile_uid.should == nil
       hash = @ongoing_calculation.to_hash
-      hash[:co2][:value].should == 1200.0
-      hash[:country][:value].should == 'Argentina'
-      hash[:usage][:value].should == 6000.0
+      hash[:co2].should == "1200"
+      hash[:country].should == 'Argentina'
+      hash[:usage].should == "6000"
       hash[:profile_item_uid].should == "J38DY57SK591"
       hash[:profile_uid].should == nil
     end
 
     it "should create multiple new ongoing calculations from db record with #find_by_type" do
       @ongoing_calculations = AMEE::DataAbstraction::OngoingCalculation.find_by_type :all, :electricity
-      @ongoing_calculations.class.should == AMEE::DataAbstraction::CalculationCollection
+      @ongoing_calculations.class.should == Array
       @ongoing_calculations.each do |on_calc|
         on_calc.label.should == :electricity
         on_calc.is_a?(AMEE::DataAbstraction::OngoingCalculation).should be_true
         on_calc.profile_item_uid.should_not be_nil
         hash = on_calc.to_hash
-        hash[:co2][:value].should_not be_nil
-        hash[:country][:value].should == 'Argentina'
-        hash[:usage][:value].should_not be_nil
+        hash[:co2].should_not be_nil
+        hash[:country].should == 'Argentina'
+        hash[:usage].should_not be_nil
       end
     end
 
     it "should instantiate record at ongoing calc #db_calculation attribute" do
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
       @ongoing_calculation.label.should == :electricity
-      @ongoing_calculation.to_hash[:co2][:value].should == 1200.0
+      @ongoing_calculation.to_hash[:co2].should == "1200"
       @ongoing_calculation.db_calculation.is_a?(AMEE::Db::Calculation).should be_true
-      @ongoing_calculation.db_calculation.id.should == @reference
-    end
-
-    it "should find assocaited db instance by profile item uid" do
-      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
-      @ongoing_calculation.db_calculation = nil
-      @ongoing_calculation.db_calculation.should == nil
-      @ongoing_calculation.get_db_calculation.is_a?(AMEE::Db::Calculation).should be_true
       @ongoing_calculation.db_calculation.id.should == @reference
     end
 
@@ -151,36 +143,35 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
     before(:each) do
       choose_mock
+      yaml_load_mock(:everything)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
     it "should find storage method" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :everything
     end
 
+    it "should start off clean" do
+      @ongoing_calculation.should_not be_dirty
+    end
+
     it "should establish whether inputs to be stored" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_true
     end
 
     it "should establish whether outputs to be stored" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.store_outputs?.should be_true
     end
 
     it "should establish whether metadata to be stored" do
-      yaml_load_mock(:everything)
       AMEE::DataAbstraction::OngoingCalculation.store_metadata?.should be_true
     end
 
     it "should return array of terms for storing which includes all terms" do
-      yaml_load_mock(:everything)
       @ongoing_calculation.stored_terms.should == @ongoing_calculation.terms
     end
 
     it "should return hash with all terms" do
-      yaml_load_mock(:everything)
       hash = @ongoing_calculation.to_hash
       hash.is_a?(Hash).should be_true
       hash.should == @ongoing_calculation.to_hash(:full)
@@ -189,13 +180,12 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save all terms" do
-      yaml_load_mock(:everything)
       record = @ongoing_calculation.db_calculation
       # show that db record has values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2][:value].should == 1200.0
-      record.to_hash[:usage][:value].should == 6000.0
+      record.to_hash[:co2].should == "1200"
+      record.to_hash[:usage].should == "6000"
       # wipe terms from db record by updating with nothing
       record.update_calculation!(options={})
       # show that db record contains no terms
@@ -205,8 +195,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       record = @ongoing_calculation.db_calculation
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2][:value].should == 1200.0
-      record.to_hash[:usage][:value].should == 6000.0
+      record.to_hash[:co2].should == "1200"
+      record.to_hash[:usage].should == "6000"
     end
 
   end
@@ -215,36 +205,35 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
     before(:each) do
       choose_mock
+      yaml_load_mock(:metadata)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
     it "should find storage method" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :metadata
     end
 
     it "should establish whether inputs to be stored" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_false
     end
 
     it "should establish whether outputs to be stored" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.store_outputs?.should be_false
     end
 
     it "should establish whether metadata to be stored" do
-      yaml_load_mock(:metadata)
       AMEE::DataAbstraction::OngoingCalculation.store_metadata?.should be_true
     end
 
+    it "should start off dirty" do
+      @ongoing_calculation.should be_dirty
+    end
+
     it "should return array of terms for storing which includes only metadata" do
-      yaml_load_mock(:metadata)
       @ongoing_calculation.stored_terms.should_not == @ongoing_calculation.terms
     end
 
     it "should return hash with only metadata terms" do
-      yaml_load_mock(:metadata)
       hash = @ongoing_calculation.to_hash
       hash.is_a?(Hash).should be_true
       hash.should_not == @ongoing_calculation.to_hash(:full)
@@ -253,13 +242,12 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save only metadata terms" do
-      yaml_load_mock(:metadata)
       record = @ongoing_calculation.db_calculation
       # show that db record has values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2][:value].should == 1200.0
-      record.to_hash[:usage][:value].should == 6000.0
+      record.to_hash[:co2].should == "1200"
+      record.to_hash[:usage].should == "6000"
       # show that db record contains no terms after save
       @ongoing_calculation.save
       record = @ongoing_calculation.db_calculation
@@ -274,36 +262,35 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
     before(:each) do
       choose_mock
+      yaml_load_mock(:outputs)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 
     it "should find storage method" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :outputs
     end
 
     it "should establish whether inputs to be stored" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_false
     end
 
     it "should establish whether outputs to be stored" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.store_outputs?.should be_true
     end
 
     it "should establish whether metadata to be stored" do
-      yaml_load_mock(:outputs)
       AMEE::DataAbstraction::OngoingCalculation.store_metadata?.should be_true
     end
 
+    it "should start off dirty" do
+      @ongoing_calculation.should be_dirty
+    end
+
     it "should return array of terms for storing which includes only outputs and metadata" do
-      yaml_load_mock(:outputs)
       @ongoing_calculation.stored_terms.should_not == @ongoing_calculation.terms
     end
 
     it "should return hash with only output and metadata terms" do
-      yaml_load_mock(:outputs)
       hash = @ongoing_calculation.to_hash
       hash.is_a?(Hash).should be_true
       hash.should_not == @ongoing_calculation.to_hash(:full)
@@ -312,18 +299,17 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save only output terms" do
-      yaml_load_mock(:outputs)
       record = @ongoing_calculation.db_calculation
       # show that db record has all values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
                                                         :usage, :country ].map!(&:to_s).sort!
-      record.to_hash[:co2][:value].should == 1200.0
-      record.to_hash[:usage][:value].should == 6000.0
+      record.to_hash[:co2].should == "1200"
+      record.to_hash[:usage].should == "6000"
       # show that db record contains only output terms after save
       @ongoing_calculation.save
       record = @ongoing_calculation.db_calculation
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2 ].map!(&:to_s).sort!
-      record.to_hash[:co2][:value].should == 1200.0
+      record.to_hash[:co2].should == "1200"
       record.to_hash[:usage].should == nil
     end
 
@@ -333,8 +319,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     
     before :each do
       choose_mock
-      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
       yaml_load_mock(:outputs)
+      @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
     
     it "should return true if successful" do
@@ -354,7 +340,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
     before(:all) do
       choose_mock
-      delete_mock
+      yaml_load_mock(:outputs)
       @ongoing_calculation = AMEE::DataAbstraction::OngoingCalculation.find :first
     end
 

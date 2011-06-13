@@ -75,7 +75,6 @@ module AMEE
         end
         return hash
       end
-
     end
   end
 end
