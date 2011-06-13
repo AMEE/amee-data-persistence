@@ -74,8 +74,8 @@ module AMEE
           end
         end
 
-        def find_by_type(ordinality,type)
-          OngoingCalculation.find(ordinality, :conditions => {:calculation_type => type.to_s})
+        def find_by_type(ordinality,type,options={})
+          OngoingCalculation.find(ordinality, options.merge(:conditions => {:calculation_type => type.to_s}))
         end
 
         def initialize_from_db_record(record)
