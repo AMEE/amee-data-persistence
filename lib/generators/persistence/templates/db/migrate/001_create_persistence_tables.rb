@@ -12,8 +12,6 @@ class CreatePersistenceTables < ActiveRecord::Migration
       t.integer  "calculation_id"
       t.string  "label"
       t.string  "value"
-      t.string  "unit"
-      t.string  "per_unit"
 
       t.timestamps
     end

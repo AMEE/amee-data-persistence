@@ -151,10 +151,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       AMEE::DataAbstraction::OngoingCalculation.storage_method.should == :everything
     end
 
-    # Not sure why this is here. OngoingCalculation objects are dirtied on initialization (AB)
-    #it "should start off clean" do
-    #  @ongoing_calculation.should_not be_dirty
-    #end
+    it "should start off dirty" do
+      @ongoing_calculation.should be_dirty
+    end
 
     it "should establish whether inputs to be stored" do
       AMEE::DataAbstraction::OngoingCalculation.store_inputs?.should be_true
