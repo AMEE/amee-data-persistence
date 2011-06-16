@@ -20,7 +20,6 @@ class CreatePersistenceTables < ActiveRecord::Migration
     add_index :calculations, :profile_item_uid
     add_index :terms, [:calculation_id, :label], :name => "calc_id_label_index"
     add_index :terms, [:label, :value, :calculation_id], :name => "label_name_calc_id_index"
-    
   end
 
   def self.down
