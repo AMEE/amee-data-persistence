@@ -1,3 +1,43 @@
+
+# Authors::   James Hetherington, James Smith, Andrew Berkeley, George Palmer
+# Copyright:: Copyright (c) 2011 AMEE UK Ltd
+# License::   Permission is hereby granted, free of charge, to any person obtaining
+#             a copy of this software and associated documentation files (the
+#             "Software"), to deal in the Software without restriction, including
+#             without limitation the rights to use, copy, modify, merge, publish,
+#             distribute, sublicense, and/or sell copies of the Software, and to
+#             permit persons to whom the Software is furnished to do so, subject
+#             to the following conditions:
+#
+#             The above copyright notice and this permission notice shall be included
+#             in all copies or substantial portions of the Software.
+#
+#             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#             EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#             MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#             IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+#             CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+#             TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+#             SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+# :title: Class: PersistenceGenerator
+
+# The global persistence storage level and migrations for the database tables can be
+# generated the <i>PersistenceGenerator</i> class.
+#
+# The level of data storage for <i>AMEE::Db</i> can be configured to three
+# distinct levels, representing the range of calculation terms which are
+# persisted: all; outputs and metadata only; and metadata only.
+#
+# To set the global persistence level and generate migration files in /db/migrate,
+# execute the following command line generator command:
+#
+#  $ script/generate persistence <storage_level>
+#
+# where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
+#
+#  $ script/generate persistence everything
+#
 class PersistenceGenerator < Rails::Generator::Base
 
   # Need to explicitly define the paths to both the templates directory and the
