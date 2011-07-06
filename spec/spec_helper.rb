@@ -49,18 +49,18 @@ end
 def populate_db
   calculation_one = { :calculation_type => :electricity, :profile_item_uid => "J38DY57SK591",
                       :country => {:value =>'Argentina'}, 
-                      :usage =>{:value => "6000"},
-                      :co2 =>{:value => "1200"} }
+                      :usage =>{:value => 6000},
+                      :co2 =>{:value => 1200}}
 
   calculation_two = { :calculation_type => :electricity, :profile_item_uid => "CJ49FFU37DIW",
                       :country =>{:value => 'Argentina'}, 
-                      :usage => {:value =>"250"},
-                      :co2 =>{:value => "23000"} }
+                      :usage => {:value =>250},
+                      :co2 =>{:value => 23000}}
 
   calculation_three = { :calculation_type => :electricity, :profile_item_uid => "K588DH47SMN5", :profile_uid => "H9KJ49FKIWO5",
                         :country => {:value =>'Argentina'},
-                        :usage => {:value =>"12345"},
-                        :co2 => {:value =>"1.2"} }
+                        :usage => {:value => 12345},
+                        :co2 => {:value => 1.2}}
 
   [ calculation_one, calculation_two, calculation_three ].each do |attr|
     AMEE::Db::Calculation.new { |calc| calc.update_calculation! attr }

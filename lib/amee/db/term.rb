@@ -41,6 +41,7 @@ module AMEE
       belongs_to :calculation, :class_name => "AMEE::Db::Calculation"
       validates_presence_of :calculation_id, :label
       before_save :initialize_units
+      before_save :initialize_value
 
       # Returns a <i>Hash</i> representation of <tt>self</tt>, e.g.
       #
@@ -59,7 +60,7 @@ module AMEE
         # Float method called on term value in order to initialize
         # explicitly numeric values as numeric objects.
         #
-        sub_hash[:value] = Float(value) rescue value
+        sub_hash[:value] = AMEE::DataAbstraction::Term.convert_value_to_type(self.value, self.value_type)
         sub_hash[:unit] = Unit.for(unit) if unit
         sub_hash[:per_unit] = Unit.for(per_unit) if per_unit
         { label.to_sym => sub_hash }
@@ -71,10 +72,20 @@ module AMEE
       # <tt>label</tt> attribute of a <i>Quantify::Unit::Base</i> object
       #
       def initialize_units
-        self.unit = unit.label if unit
-        self.per_unit = per_unit.label if per_unit
+        if unit
+          self.unit = unit.is_a?(Quantify::Unit::Base) ? unit.label : unit
+        end
+        if per_unit
+          self.per_unit = per_unit.is_a?(Quantify::Unit::Base) ? per_unit.label : per_unit
+        end
       end
-
+      
+      def initialize_value
+        unless self.value.nil?
+          self.value_type = self.value.class.to_s
+          self.value      = self.value.to_s
+        end
+      end
     end
   end
 end

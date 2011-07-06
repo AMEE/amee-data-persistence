@@ -131,7 +131,7 @@ describe Calculation do
       hash[:co2][:value].should eql 1234.5
       hash[:co2][:unit].name.should eql 'kilogram'
       hash[:usage][:unit].should be_a Quantify::Unit::NonSI
-      hash[:usage][:value].should eql 500.0
+      hash[:usage][:value].should eql 500
       hash[:usage][:unit].name.should eql 'kilowatt hour'
       hash[:country][:value].should eql 'Argentina'
       @calculation.calculation_type.should eql 'power'
