@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "README",
     "Rakefile",
     "VERSION",
+    "amee-data-persistence.gemspec",
     "amee-data-persistence.tmproj",
     "init.rb",
     "lib/amee-data-persistence.rb",
