@@ -51,13 +51,18 @@ module AMEE
         db_calculation.nil? ? nil : db_calculation.id
       end
 
+      # Same as <i>save</i> but raises an exception on error
+      def save!
+        validate!
+        record = db_calculation || get_db_calculation
+        record.update_calculation!(to_hash)
+      end
+
       # Saves a representation of <tt>self<tt> to the database. Returns
       # <tt>true</tt> if successful, otherwise <tt>false</tt>.
       #
       def save
-        validate!
-        record = db_calculation || get_db_calculation
-        record.update_calculation!(to_hash)
+        save!
         true
       rescue ActiveRecord::RecordNotSaved
         false
@@ -71,6 +76,20 @@ module AMEE
         AMEE::Db::Calculation.delete record.id
         self.db_calculation = nil
         delete_profile_item
+      end
+
+      # As <i>calculate_and_save</i> but raises an exception on error
+      def calculate_and_save!
+        calculate!
+        save!
+      end
+      
+      # Performs the calculation against AMEE and saves it to the database
+      def calculate_and_save
+        calculate_and_save!
+        true
+      rescue ActiveRecord::RecordNotFound, AMEE::DataAbstraction::Exceptions::DidNotCreateProfileItem
+        false
       end
 
       # Finds the instance of database record associated with <tt>self</tt> based
