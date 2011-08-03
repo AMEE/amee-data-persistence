@@ -21,14 +21,6 @@ AMEE::DataAbstraction::OngoingCalculation.class_eval { include AMEE::DataAbstrac
 ActiveRecord::Base.establish_connection(DB_CONFIG)
 ActiveRecord::Migrator.up(DB_MIGRATION)
 
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-
 Spec::Runner.configure do |config|
   config.mock_with :flexmock
 end
