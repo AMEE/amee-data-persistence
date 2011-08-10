@@ -1,4 +1,3 @@
-
 # Authors::   James Hetherington, James Smith, Andrew Berkeley, George Palmer
 # Copyright:: Copyright (c) 2011 AMEE UK Ltd
 # License::   Permission is hereby granted, free of charge, to any person obtaining
