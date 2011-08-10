@@ -136,7 +136,6 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       Calculations[:electricity].begin_calculation.db_calculation.should be_nil
       Calculations[:electricity].begin_calculation.id.should be_nil
     end
-
   end
 
   describe "when storage method is :everything" do

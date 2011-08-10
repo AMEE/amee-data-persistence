@@ -1,5 +1,43 @@
+
+# Authors::   James Hetherington, James Smith, Andrew Berkeley, George Palmer
+# Copyright:: Copyright (c) 2011 AMEE UK Ltd
+# License::   Permission is hereby granted, free of charge, to any person obtaining
+#             a copy of this software and associated documentation files (the
+#             "Software"), to deal in the Software without restriction, including
+#             without limitation the rights to use, copy, modify, merge, publish,
+#             distribute, sublicense, and/or sell copies of the Software, and to
+#             permit persons to whom the Software is furnished to do so, subject
+#             to the following conditions:
+#
+#             The above copyright notice and this permission notice shall be included
+#             in all copies or substantial portions of the Software.
+#
+#             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#             EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#             MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#             IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+#             CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+#             TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+#             SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+# :title: Class: AMEE::Db::Calculation
+
 module AMEE
   module Db
+
+    # This class represents a database record for a calculation performed using
+    # the <i>AMEE:DataAbstraction::OngoingCalculation</i> class. This class stores
+    # the primary calculation level attributes such as the calculation
+    # <tt>calculation_type</tt>, <tt>profile_uid</tt> and <tt>profile_item_uid</tt>.
+    #
+    # The values and attributes of specific calculation terms are stored via the
+    # related class <i>AMEE::Db::Term</i>.
+    #
+    # This class is typically used by proxy, via the <tt>find</tt>,
+    # <tt>find_by_type</tt>, <tt>#save</tt>, <tt>#delete</tt>, and
+    # <tt>#get_db_calculation</tt> methods associated with the
+    # <i>AMEE:DataAbstraction::OngoingCalculation</i> class.
+    #
     class Calculation < ActiveRecord::Base
 
       has_many              :terms, :class_name => "AMEE::Db::Term", :dependent => :destroy
@@ -8,15 +46,17 @@ module AMEE
       validates_format_of   :profile_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
       before_save           :validate_calculation_type
 
-      # This is required as ActiveRecord seemingly cannot handle symbols correctly.
-      # Calculation types are therefore stored as strings. Symbol representations
-      # are conveniently provided by the #type method below
+      # Standardize the <tt>calculation_type</tt> attribute to <i>String</i>
+      # format. Called using before filter prior to record saving to ensure
+      # string serialization.
       #
       def validate_calculation_type
         self.calculation_type = calculation_type.to_s
       end
 
-      # Convenience method for accessing calculation type as the canonical symbol
+      # Convenience method for returning the <tt>calculation_type</tt> attribute
+      # of <tt>self</tt> in canonical symbol form.
+      #
       def type
         calculation_type.to_sym
       end
@@ -24,14 +64,27 @@ module AMEE
       # Returns the subset of all instance attributes which should be editable via
       # mass update methods and which should be included in hash representations of
       # self, i.e. those passed in explcitly as data rather than added by
-      # ActiveRecord
+      # <i>ActiveRecord</i> (e.g. <tt>id</tt>, <tt>created_at</tt>, etc.).
       #
       def primary_calculation_attributes
         attributes.keys.reject {|attr| ['id','created_at','updated_at'].include? attr }
       end
 
-      # Bespoke update method handling both attributes of self and associated
-      # terms
+      # Update the attributes of <tt>self</tt> and those of any related terms,
+      # according to the passed <tt>options</tt> hash. Any associated terms which
+      # are not represented in <tt>options</tt> are deleted.
+      #
+      # Term attributes provided in <tt>options</tt> should be keyed with the
+      # term label and include a sub-hash with keys represent one or more of
+      # :value, :unit and :per_unit. E.g.,
+      #
+      #   options = { :profile_item_uid => "W93UEY573U4E8",
+      #               :mass => { :value => 23 },
+      #               :distance => { :value => 1400,
+      #                              :unit => <Quantify::Unit::SI ... > }}
+      #
+      #   my_calculation.update_calculation!(options)
+      #
       def update_calculation!(options)
         primary_calculation_attributes.each do |attr|
           if options.keys.include? attr.to_sym
@@ -46,26 +99,68 @@ module AMEE
         reload
       end
 
-      # use attr_accessor (via #send) method rather than #update_attribute so that
-      # validations are performed
+      # Update the attribute of <tt>self</tt> represented by the label
+      # <tt>key</tt> with the value of <tt>value</tt>. By default,
+      # the <tt>#save!</tt> method is called, in turn calling the class
+      # validations.
+      #
+      # Specify that the record should not be saved by passing <tt>false</tt>
+      # as the final argument.
+      #
       def update_calculation_attribute!(key,value,save=true)
+        # use attr_accessor (via #send) method rather than
+        # #update_attribute so that validations are performed
+        #
         send("#{key}=", (value.nil? ? nil : value.to_s))
         save! if save
       end
 
+      # Add, or update an existing, associated term represented by the label
+      # <tt>label</tt> and value, unit and/or per_unit attributes defined by
+      # <tt>data</tt>. The <tt>data</tt> argument should be a hash with keys
+      # represent one or more of :value, :unit and :per_unit. E.g.,
+      #
+      #   data = {  :value => 1400,
+      #            :unit => <Quantify::Unit::SI ... > }
+      #
+      #   my_calculation.add_or_update_term!(:distance, data)
+      #
+      # This method is called as part of the <tt>#update_calculation!</tt>
+      # method
+      #
       def add_or_update_term!(label,data)
         term = Term.find_or_initialize_by_calculation_id_and_label(id,label.to_s)
         term.update_attributes!(data)
       end
 
+      # Delete all of the terms which are not explicitly referenced in the
+      # <tt>options</tt> hash.
+      #
+      # This method is called as part of the <tt>#update_calculation!</tt>
+      # method
+      #
       def delete_unspecified_terms(options)
         terms.each do |term|
           Term.delete(term.id) unless options.keys.include? term.label.to_sym
         end
       end
 
-      # Covert record to hash. Only the data explicitly passed in are included, i.e.
-      # those added by ActiveRecord (created, updated, id) are ignored.
+      # Returns a <i>Hash</i> representation of <tt>self</tt> including a only
+      # the data explicitly passed in (those added by <i>ActiveRecord</i> -
+      # <tt>created</tt>, <tt>updated</tt>, <tt>id</tt> - are ignored) as well
+      # as sub-hashes for all associated terms. E.g.,
+      #
+      #   my_calculation.to_hash       #=> { :profile_uid => "EYR758EY36WY",
+      #                                      :profile_item_uid => "W83URT48DY3W",
+      #                                      :type => { :value => 'car' },
+      #                                      :distance => { :value => 1600,
+      #                                                     :unit => <Quantify::Unit::SI> },
+      #                                      :co2 => { :value => 234.1,
+      #                                                :unit => <Quantify::Unit::NonSI> }}
+      #
+      # This method can be used to initialize instances of the class
+      # <tt>OngoingCalculation</tt> by providing the hashed options for any of 
+      # the <tt>choose...</tt> methods.
       #
       def to_hash
         hash = {}
