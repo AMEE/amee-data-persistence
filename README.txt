@@ -15,6 +15,7 @@ Documentation: http://rubydoc.info/gems/amee-data-persistence
 == INSTALLATION
 
  gem install amee-data-persistence
+ 
 == REQUIREMENTS
 
  * ruby 1.8.7
@@ -23,7 +24,7 @@ Documentation: http://rubydoc.info/gems/amee-data-persistence
  All gem requirements should be installed as part of the rubygems installation process 
  above, but are listed here for completeness.
 
- * amee-data-abstraction >= 1.1.0
+ * amee-data-abstraction ~> 1.0.0
  
 == USAGE
 

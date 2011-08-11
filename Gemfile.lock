@@ -1,6 +1,5 @@
 GEM
   remote: http://rubygems.org/
-  remote: http://amee:aeC5ahx4@gems.amee.com/
   specs:
     activerecord (2.3.12)
       activesupport (= 2.3.12)
@@ -39,7 +38,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 2.3.5)
-  amee-data-abstraction (>= 1.0.0)
+  amee-data-abstraction (~> 1.0.0)
   bundler (~> 1.0.0)
   flexmock (> 0.8.6)
   jeweler (~> 1.6.4)
