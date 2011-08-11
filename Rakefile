@@ -65,9 +65,9 @@ Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "amee-data-persistence"
   gem.homepage = "http://github.com/AMEE/amee-data-persistence"
-  gem.license = "MIT"
+  gem.license = "BSD 3-Clause"
   gem.summary = %Q{Persistent storage of calculations performed against the AMEE API}
-  gem.description = %Q{Part of the AMEE AppKit this gem provides storage and retrival of data provided by the Data Abstraction gem}
+  gem.description = %Q{Part of the AMEEappkit, this gem provides storage and retrival of data provided by the amee-data-abstraction gem}
   gem.email = "help@amee.com"
   gem.authors = ["James Hetherington", "Andrew Berkeley", "James Smith", "George Palmer"]
   # dependencies defined in Gemfile
