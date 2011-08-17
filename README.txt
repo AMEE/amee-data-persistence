@@ -1,32 +1,34 @@
-Authors
-   James Hetherington, James Smith, Andrew Berkeley, George Palmer
+== amee-data-persistence
 
-Copyright
-   Copyright (c) 2011 AMEE UK Ltd
-
-License
-   Permission is hereby granted, free of charge, to any person obtaining a copy
-   of this software and associated documentation files (the "Software"), to deal
-   in the Software without restriction, including without limitation the rights
-   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-   of the Software, and to permit persons to whom the Software is furnished to do
-   so, subject to the following conditions:
-
-   The above copyright notice and this permission notice shall be include in all
-   copies or substantial portions of the Software.
-
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-   SOFTWARE.
-
-
-Brief introduction
 The amee-data-persistence gem provides database support for use in conjunction
-with the amee-data-abstraction gem. The library repesents calculations as
+with the amee-data-abstraction gem.
+
+Licensed under the BSD 3-Clause license (See LICENSE.txt for details)
+
+Authors: James Hetherington, James Smith, Andrew Berkeley, George Palmer
+
+Copyright: Copyright (c) 2011 AMEE UK Ltd
+
+Homepage: http://github.com/AMEE/amee-data-persistence
+
+Documentation: http://rubydoc.info/gems/amee-data-persistence
+== INSTALLATION
+
+ gem install amee-data-persistence
+ 
+== REQUIREMENTS
+
+ * ruby 1.8.7
+ * rubygems >= 1.5
+
+ All gem requirements should be installed as part of the rubygems installation process 
+ above, but are listed here for completeness.
+
+ * amee-data-abstraction ~> 1.0.0
+ 
+== USAGE
+
+The library repesents calculations as
 database records using two classes (<i>AMEE::Db::Calculation</i> and
 <i>AMEE::Db::Term</i>) both of which inherit <i>ActiveRecord::Base</i>.
 
@@ -52,7 +54,7 @@ where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
   $ script/generate persistence everything
 
 
-=Example usage
+=== Example usage
 
   my_calculation = OngoingCalculation.find(:first)
 
@@ -85,5 +87,3 @@ where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
   my_calculation.save            #=> true
 
   my_calculation.delete          #=> nil
-
----
