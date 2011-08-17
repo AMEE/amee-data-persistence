@@ -9,7 +9,7 @@ require 'amee-data-abstraction'
 RAILS_ROOT = '.'
 
 DB_CONFIG = YAML.load_file(File.dirname(__FILE__) + '/database.yml')
-DB_MIGRATION = File.join(File.dirname(__FILE__), '..','lib','generators','persistence','templates','db','migrate')
+DB_MIGRATION = File.join(File.dirname(__FILE__), '..','generators','persistence','templates','db','migrate')
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'amee-data-persistence'
