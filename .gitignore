@@ -4,3 +4,4 @@ nbproject/*
 *database.log
 .gitignore
 *.gem
+doc

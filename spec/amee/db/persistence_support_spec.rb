@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 
 describe AMEE::DataAbstraction::OngoingCalculation do
 
@@ -298,6 +298,9 @@ describe AMEE::DataAbstraction::OngoingCalculation do
     end
 
     it "should save only output terms" do
+      puts @ongoing_calculation.inspect
+      puts @ongoing_calculation.db_calculation.inspect
+      puts @ongoing_calculation.db_calculation.to_hash.inspect
       record = @ongoing_calculation.db_calculation
       # show that db record has all values
       record.to_hash.keys.map!(&:to_s).sort!.should == [:profile_item_uid, :profile_uid, :co2,
