@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "amee-data-abstraction", "~> 1.1"
+gem "amee-data-abstraction", "~> 2.0"
 gem 'activerecord', '~> 3.0.10'
 
 group :development do
