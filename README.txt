@@ -47,11 +47,11 @@ and metadata only.
 The global persistence storage level and migrations for the database tables
 (under /db/migrate) can be generated using the command line generator command:
 
-  $ script/generate persistence <storage_level>
+  $ rails generate persistence <storage_level>
 
 where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
 
-  $ script/generate persistence everything
+  $ rails generate persistence everything
 
 
 === Example usage

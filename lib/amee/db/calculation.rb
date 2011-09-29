@@ -22,9 +22,9 @@ module AMEE
     class Calculation < ActiveRecord::Base
 
       has_many              :terms, :class_name => "AMEE::Db::Term", :dependent => :destroy
-      validates_presence_of :calculation_type
-      validates_format_of   :profile_item_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
-      validates_format_of   :profile_uid, :with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true
+      validates             :calculation_type, :presence => true
+      validates             :profile_item_uid, :format => {:with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true}
+      validates             :profile_uid, :format => {:with => /\A([A-Z0-9]{12})\z/, :allow_nil => true, :allow_blank => true}
       before_save           :validate_calculation_type
 
       # Standardize the <tt>calculation_type</tt> attribute to <i>String</i>
