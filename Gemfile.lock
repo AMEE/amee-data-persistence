@@ -11,13 +11,13 @@ GEM
       arel (~> 2.0.10)
       tzinfo (~> 0.3.23)
     activesupport (3.0.10)
-    amee (3.0.1)
+    amee (4.0.0)
       activesupport (~> 3.0.10)
       json
       log4r
       nokogiri (~> 1.4.3.1)
     amee-data-abstraction (2.0.0)
-      amee (~> 3.0)
+      amee (~> 4.0)
       quantify (~> 2.0.0)
       uuidtools (= 2.1.2)
     arel (2.0.10)
@@ -30,7 +30,7 @@ GEM
       bundler (~> 1.0)
       git (>= 1.2.5)
       rake
-    json (1.5.4)
+    json (1.6.1)
     log4r (1.1.9)
     nokogiri (1.4.3.1)
     quantify (2.0.0)
