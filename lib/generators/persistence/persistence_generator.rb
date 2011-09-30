@@ -3,6 +3,9 @@ require 'rails/generators/active_record'
 
 class PersistenceGenerator < Rails::Generators::Base
 
+  # Get method from command line - default is metadata
+  argument :method, :type => :string, :desc => "The storage method to use; everything, metadata, or outputs", :default => 'metadata'
+
   include Rails::Generators::Migration
 
   desc "Generates a migration for the AMEE Organisation models"
@@ -21,21 +24,14 @@ class PersistenceGenerator < Rails::Generators::Base
   end
 
   def manifest
-    record do |m|
-      
-      ########################################
-      # persistence level configuration file #
-      ########################################
+    ########################################
+    # persistence level configuration file #
+    ########################################
 
-      # Get method from command line - default is metadata
-      method = args[0] || 'metadata'
-      # Make sure there is a config directory
-      m.directory File.join("config")
-      # Create persistence.yml file
-      m.template File.join("config","persistence.yml.erb"),
-                 File.join("config","persistence.yml"),
-                 :assigns => {:method => method}
+    # Create persistence.yml file
+    template File.join("config","persistence.yml.erb"),
+             File.join("config","persistence.yml"),
+             :assigns => {:method => self.method}
 
-    end
   end
 end
