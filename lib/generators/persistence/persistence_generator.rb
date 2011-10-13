@@ -21,6 +21,7 @@ class PersistenceGenerator < Rails::Generators::Base
     migration_template 'db/migrate/001_create_persistence_tables.rb', 'db/migrate/create_persistence_tables'
     migration_template 'db/migrate/002_add_unit_columns.rb', 'db/migrate/add_unit_columns'
     migration_template 'db/migrate/003_add_value_types.rb', 'db/migrate/add_value_types'
+    migration_template 'db/migrate/004_change_term_column_type.rb', 'db/migrate/change_term_column_type'
   end
 
   def manifest
