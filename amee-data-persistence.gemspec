@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{amee-data-persistence}
-  s.version = "2.0.2"
+  s.version = "2.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Hetherington", "Andrew Berkeley", "James Smith", "George Palmer"]
-  s.date = %q{2011-09-30}
+  s.date = %q{2011-10-13}
   s.description = %q{Part of the AMEEappkit, this gem provides storage and retrival of data provided by the amee-data-abstraction gem}
   s.email = %q{help@amee.com}
   s.extra_rdoc_files = [
@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
     "lib/generators/persistence/templates/db/migrate/001_create_persistence_tables.rb",
     "lib/generators/persistence/templates/db/migrate/002_add_unit_columns.rb",
     "lib/generators/persistence/templates/db/migrate/003_add_value_types.rb",
+    "lib/generators/persistence/templates/db/migrate/004_change_term_column_type.rb",
     "spec/amee/db/calculation_spec.rb",
     "spec/amee/db/config_spec.rb",
     "spec/amee/db/persistence_support_spec.rb",
@@ -49,7 +50,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/AMEE/amee-data-persistence}
   s.licenses = ["BSD 3-Clause"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.4.2}
   s.summary = %q{Persistent storage of calculations performed against the AMEE API}
 
   if s.respond_to? :specification_version then
