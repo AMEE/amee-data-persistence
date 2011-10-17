@@ -8,7 +8,11 @@ RSpec.configure do |config|
   config.mock_with :flexmock
 end
 
-RAILS_ROOT = '.'
+class Rails
+  def self.root
+    File.dirname(__FILE__) + '/amee/fixtures'
+  end
+end
 
 DB_CONFIG = YAML.load_file(File.dirname(__FILE__) + '/database.yml')
 DB_MIGRATION = File.join(File.dirname(__FILE__), '..','lib','generators','persistence','templates','db','migrate')
@@ -57,29 +61,4 @@ def populate_db
   [ calculation_one, calculation_two, calculation_three ].each do |attr|
     AMEE::Db::Calculation.new { |calc| calc.update_calculation! attr }
   end
-end
-
-def initialize_calculation_set
-  eval "Calculations = AMEE::DataAbstraction::CalculationSet.new {
-      calculation{
-        name 'Electricity'
-        label :electricity
-        path '/business/energy/electricity/grid'
-        drill {
-          label :country
-          path 'country'
-          fixed 'Argentina'
-        }
-        profile {
-          label :usage
-          name 'Electricity Used'
-          path 'energyPerTime'
-        }
-        output {
-          label :co2
-          name 'Carbon Dioxide'
-          path :default
-        }
-      }
-    }"
 end
