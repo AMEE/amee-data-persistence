@@ -20,7 +20,8 @@ module AMEE
     class Term < ActiveRecord::Base
 
       belongs_to :calculation, :class_name => "AMEE::Db::Calculation"
-      validates_presence_of :calculation_id, :label
+      validates :calculation_id, :presence => true
+      validates :label,          :presence => true
       before_save :initialize_units
       before_save :initialize_value
 

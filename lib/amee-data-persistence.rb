@@ -2,11 +2,14 @@
 # Released as Open Source Software under the BSD 3-Clause license. See LICENSE.txt for details.
 
 require 'rubygems'
-gem 'activerecord', "~> 2.3.9"
 require 'active_record'
 require 'quantify'
+require 'amee-data-abstraction'
 
 require 'amee/data_abstraction/calculation_collection'
+require 'amee/data_abstraction/persistence_support'
 require 'amee/db/calculation'
 require 'amee/db/term'
 require 'amee/db/config'
+
+::AMEE::DataAbstraction::OngoingCalculation.send :include,  ::AMEE::DataAbstraction::PersistenceSupport
