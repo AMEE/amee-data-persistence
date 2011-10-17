@@ -29,3 +29,4 @@ require 'amee-data-persistence'
 # methods for managing persistence of calculations.
 #
 ::AMEE::DataAbstraction::OngoingCalculation.class_eval { include ::AMEE::DataAbstraction::PersistenceSupport }
+::AMEE::DataAbstraction::CalculationSet.class_eval { include ::AMEE::DataAbstraction::CalculationSetSupport }

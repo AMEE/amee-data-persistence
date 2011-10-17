@@ -39,7 +39,7 @@ module AMEE
       private
       
       def load_storage_method
-        m = YAML.load_file("#{RAILS_ROOT}/config/persistence.yml")['method'].to_sym rescue nil
+        m = YAML.load_file("#{Rails.root}/config/persistence.yml")['method'].to_sym rescue nil
         raise "amee-data-persistence: Invalid storage method" unless [:metadata, :outputs, :everything].include? m
         m
       end
