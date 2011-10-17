@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{amee-data-persistence}
-  s.version = "1.1.0"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Hetherington", "Andrew Berkeley", "James Smith", "George Palmer"]
@@ -35,15 +35,17 @@ Gem::Specification.new do |s|
     "init.rb",
     "lib/amee-data-persistence.rb",
     "lib/amee/data_abstraction/calculation_collection.rb",
-    "lib/amee/data_abstraction/persistence_support.rb",
+    "lib/amee/data_abstraction/ongoing_calculation_persistence_support.rb",
     "lib/amee/db/calculation.rb",
     "lib/amee/db/config.rb",
     "lib/amee/db/term.rb",
     "rails/init.rb",
     "spec/amee/db/calculation_spec.rb",
     "spec/amee/db/config_spec.rb",
-    "spec/amee/db/persistence_support_spec.rb",
+    "spec/amee/db/ongoing_calculation_persistence_support_spec.rb",
     "spec/amee/db/term_spec.rb",
+    "spec/amee/fixtures/config/calculations/transport.lock.rb",
+    "spec/amee/fixtures/config/calculations/transport.rb",
     "spec/database.yml",
     "spec/spec.opts",
     "spec/spec_helper.rb"

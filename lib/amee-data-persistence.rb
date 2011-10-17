@@ -7,6 +7,7 @@ require 'active_record'
 require 'quantify'
 
 require 'amee/data_abstraction/calculation_collection'
+require 'amee/data_abstraction/ongoing_calculation_persistence_support'
 require 'amee/db/calculation'
 require 'amee/db/term'
 require 'amee/db/config'
