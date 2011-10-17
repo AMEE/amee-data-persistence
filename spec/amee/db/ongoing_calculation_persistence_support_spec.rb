@@ -4,7 +4,7 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
   before(:all) do
     populate_db
-    AMEE::DataAbstraction::CalculationSet.find("transport")
+    AMEE::DataAbstraction::CalculationSet.find("electricity")
   end
 
   after(:all) do
@@ -133,8 +133,8 @@ describe AMEE::DataAbstraction::OngoingCalculation do
 
 
     it "should give nil id, if not saved" do
-      AMEE::DataAbstraction::CalculationSet.find("transport")[:electricity].begin_calculation.db_calculation.should be_nil
-      AMEE::DataAbstraction::CalculationSet.find("transport")[:electricity].begin_calculation.id.should be_nil
+      AMEE::DataAbstraction::CalculationSet.find("electricity")[:electricity].begin_calculation.db_calculation.should be_nil
+      AMEE::DataAbstraction::CalculationSet.find("electricity")[:electricity].begin_calculation.id.should be_nil
     end
   end
 
