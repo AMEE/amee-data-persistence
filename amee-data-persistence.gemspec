@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
     "spec/amee/db/config_spec.rb",
     "spec/amee/db/ongoing_calculation_persistence_support_spec.rb",
     "spec/amee/db/term_spec.rb",
+    "spec/amee/fixtures/config/calculations/electricity.lock.rb",
     "spec/amee/fixtures/config/calculations/electricity.rb",
     "spec/database.yml",
     "spec/spec.opts",
