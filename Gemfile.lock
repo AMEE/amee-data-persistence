@@ -16,7 +16,7 @@ GEM
       json
       log4r
       nokogiri (~> 1.4.3.1)
-    amee-data-abstraction (2.0.0)
+    amee-data-abstraction (2.2.0)
       amee (~> 4.0)
       quantify (~> 2.0.0)
       uuidtools (= 2.1.2)
@@ -56,7 +56,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 3.0.10)
-  amee-data-abstraction (~> 2.0)
+  amee-data-abstraction (~> 2.2.0)
   bundler (~> 1.0.0)
   flexmock (> 0.8.6)
   jeweler (~> 1.6.4)

@@ -223,7 +223,7 @@ module AMEE
           unless record.is_a? AMEE::Db::Calculation
             raise ArgumentError.new("Argument is not of class AMEE::Db::Calculation")
           end
-          calc = Calculations.calculations[record.type].begin_calculation
+          calc = AMEE::DataAbstraction::CalculationSet.find_prototype_calculation(record.type).begin_calculation
           calc.db_calculation = record
           # Means that validation needs to occur before calcs are saved
     		  calc.choose_without_validation!(record.to_hash)
