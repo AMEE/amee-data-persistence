@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Hetherington", "Andrew Berkeley", "James Smith", "George Palmer"]
-  s.date = %q{2011-10-17}
+  s.date = %q{2011-10-18}
   s.description = %q{Part of the AMEEappkit, this gem provides storage and retrival of data provided by the amee-data-abstraction gem}
   s.email = %q{help@amee.com}
   s.extra_rdoc_files = [
@@ -44,8 +44,8 @@ Gem::Specification.new do |s|
     "spec/amee/db/config_spec.rb",
     "spec/amee/db/ongoing_calculation_persistence_support_spec.rb",
     "spec/amee/db/term_spec.rb",
-    "spec/amee/fixtures/config/calculations/transport.lock.rb",
-    "spec/amee/fixtures/config/calculations/transport.rb",
+    "spec/amee/fixtures/config/calculations/electricity.lock.rb",
+    "spec/amee/fixtures/config/calculations/electricity.rb",
     "spec/database.yml",
     "spec/spec.opts",
     "spec/spec_helper.rb"
