@@ -1,4 +1,7 @@
 = Changelog
 
+== 1.2.0
+  * Update for supporting the new handling of Calculation Sets in amee-data-abstraction
+
 == 1.0.0
   * Initial public release

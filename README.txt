@@ -87,3 +87,6 @@ where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
   my_calculation.save            #=> true
 
   my_calculation.delete          #=> nil
+
+In order to use the persistence library, prototype calculations must be held within
+instances of the AMEE::DataAbstraction::CalculationSet class
