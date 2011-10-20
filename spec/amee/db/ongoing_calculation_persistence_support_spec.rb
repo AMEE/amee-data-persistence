@@ -197,7 +197,14 @@ describe AMEE::DataAbstraction::OngoingCalculation do
       record.to_hash[:co2][:value].should == 1200
       record.to_hash[:usage][:value].should == 6000
     end
-  
+    
+    it "should only save if the calculation is dirty" do
+      @ongoing_calculation.save.should be_true
+      mock = flexmock(@ongoing_calculation)
+      
+      mock.should_receive(:update_calculation!).times(0)
+      @ongoing_calculation.save.should be_true
+    end
   end
   
   describe "when storage method is :metadata" do
