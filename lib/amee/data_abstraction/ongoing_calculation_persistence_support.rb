@@ -34,13 +34,9 @@ module AMEE
 
       # Same as <i>save</i> but raises an exception on error
       def save!
-        if dirty?
-          validate!
-          record = db_calculation || get_db_calculation
-          record.update_calculation!(to_hash)
-        else
-          true
-        end
+        validate!
+        record = db_calculation || get_db_calculation
+        record.update_calculation!(to_hash)
       end
 
       # Saves a representation of <tt>self<tt> to the database. Returns
