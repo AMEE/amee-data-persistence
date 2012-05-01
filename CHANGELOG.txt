@@ -1,5 +1,8 @@
 = Changelog
 
+== 2.3.0
+  * Bump dependencies
+
 == 2.1.0
   * Update for supporting the new handling of Calculation Sets in amee-data-abstraction
 
