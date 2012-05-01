@@ -5,3 +5,4 @@ nbproject/*
 .gitignore
 *.gem
 doc
+Gemfile.lock
