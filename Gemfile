@@ -1,10 +1,10 @@
 source "http://rubygems.org"
 
-gem "amee-data-abstraction", "~> 2.2.0"
+gem "amee-data-abstraction", "~> 2.3.0"
 gem 'activerecord', '~> 3.0.10'
 
 group :development do
-  gem "bundler", "~> 1.0.0"
+  gem "bundler", "~> 1.1.0"
   gem "jeweler", "~> 1.6.4"
   gem 'rspec', '2.6.0'
   gem 'flexmock', '> 0.8.6'
