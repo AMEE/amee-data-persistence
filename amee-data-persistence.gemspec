@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     ".rvmrc",
     "CHANGELOG.txt",
     "Gemfile",
+    "Gemfile.lock",
     "LICENSE.txt",
     "README.txt",
     "Rakefile",
@@ -59,33 +60,30 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<amee-data-abstraction>, ["~> 2.3.0"])
-      s.add_runtime_dependency(%q<activerecord>, ["~> 3.0.10"])
+      s.add_runtime_dependency(%q<activerecord>, ["~> 3.2.0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_development_dependency(%q<rspec>, ["= 2.6.0"])
       s.add_development_dependency(%q<flexmock>, ["> 0.8.6"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<sqlite3>, [">= 0"])
     else
       s.add_dependency(%q<amee-data-abstraction>, ["~> 2.3.0"])
-      s.add_dependency(%q<activerecord>, ["~> 3.0.10"])
+      s.add_dependency(%q<activerecord>, ["~> 3.2.0"])
       s.add_dependency(%q<bundler>, ["~> 1.1.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_dependency(%q<rspec>, ["= 2.6.0"])
       s.add_dependency(%q<flexmock>, ["> 0.8.6"])
-      s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<rdoc>, [">= 0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
     end
   else
     s.add_dependency(%q<amee-data-abstraction>, ["~> 2.3.0"])
-    s.add_dependency(%q<activerecord>, ["~> 3.0.10"])
+    s.add_dependency(%q<activerecord>, ["~> 3.2.0"])
     s.add_dependency(%q<bundler>, ["~> 1.1.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
     s.add_dependency(%q<rspec>, ["= 2.6.0"])
     s.add_dependency(%q<flexmock>, ["> 0.8.6"])
-    s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<rdoc>, [">= 0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
   end
