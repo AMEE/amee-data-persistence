@@ -68,7 +68,7 @@ where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
 
                                  #=> <AMEE::DataAbstraction::CalculationCollection ... >
 
-  my_calculation = OngoingCalculation.find_by_type(:all, :electricity)
+  my_calculation = OngoingCalculation.where('calculation_type = ?', 'electricity')
 
                                  #=> <AMEE::DataAbstraction::CalculationCollection ... >
 
