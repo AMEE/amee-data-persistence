@@ -1,4 +1,4 @@
-== amee-data-persistence
+## amee-data-persistence
 
 The amee-data-persistence gem provides database support for use in conjunction
 with the amee-data-abstraction gem.
@@ -12,11 +12,12 @@ Copyright: Copyright (c) 2011 AMEE UK Ltd
 Homepage: http://github.com/AMEE/amee-data-persistence
 
 Documentation: http://rubydoc.info/gems/amee-data-persistence
-== INSTALLATION
+
+## INSTALLATION
 
  gem install amee-data-persistence
  
-== REQUIREMENTS
+## REQUIREMENTS
 
  * ruby 1.8.7
  * rubygems >= 1.5
@@ -26,19 +27,19 @@ Documentation: http://rubydoc.info/gems/amee-data-persistence
 
  * amee-data-abstraction ~> 1.0.0
  
-== USAGE
+## USAGE
 
 The library repesents calculations as
-database records using two classes (<i>AMEE::Db::Calculation</i> and
-<i>AMEE::Db::Term</i>) both of which inherit <i>ActiveRecord::Base</i>.
+database records using two classes (_AMEE::Db::Calculation_ and
+_AMEE::Db::Term_) both of which inherit _ActiveRecord::Base_.
 
-The library also defines the <i>AMEE::DataAbstraction::PersistenceSupport</i>
-module which is mixed into the <i>AMEE::DataAbstraction::OngoingCalculation</i>
+The library also defines the _AMEE::DataAbstraction::PersistenceSupport_
+module which is mixed into the _AMEE::DataAbstraction::OngoingCalculation_
 class by default when the library is required. The module provides a number of
 class and instance methods which provide an interface between the
-<i>AMEE::DataAbstraction::OngoingCalculation</i> class (and its instances) and
+_AMEE::DataAbstraction::OngoingCalculation_ class (and its instances) and
 the database. It is via these methods that the persistence functionality
-provided by the <i>AMEE::Db</i> classes is principally used.
+provided by the _AMEE::Db_ classes is principally used.
 
 The level of data storage can be configured to three distinct levels, representing
 the range of calculation terms which are persisted: all; outputs and metadata only;
@@ -49,44 +50,44 @@ The global persistence storage level and migrations for the database tables
 
   $ rails generate persistence <storage_level>
 
-where <storage_level> can be either 'everything', 'outputs' or 'metadata', e.g.,
+where `<storage_level>` can be either 'everything', 'outputs' or 'metadata', e.g.,
 
   $ rails generate persistence everything
 
 
-=== Example usage
+### Example usage
 
-  my_calculation = OngoingCalculation.find(:first)
+    my_calculation = OngoingCalculation.find(:first)
 
-                                 #=> <AMEE::DataAbstraction::OngoingCalculation ... >
+                                   #=> <AMEE::DataAbstraction::OngoingCalculation ... >
 
-  my_calculation = OngoingCalculation.find(28)
+    my_calculation = OngoingCalculation.find(28)
 
-                                 #=> <AMEE::DataAbstraction::OngoingCalculation ... >
+                                   #=> <AMEE::DataAbstraction::OngoingCalculation ... >
 
-  my_calculation = OngoingCalculation.find(:all)
+    my_calculation = OngoingCalculation.find(:all)
 
-                                 #=> <AMEE::DataAbstraction::CalculationCollection ... >
+                                   #=> <AMEE::DataAbstraction::CalculationCollection ... >
 
-  my_calculation = OngoingCalculation.where('calculation_type = ?', 'electricity')
+    my_calculation = OngoingCalculation.where('calculation_type = ?', 'electricity')
 
-                                 #=> <AMEE::DataAbstraction::CalculationCollection ... >
+                                   #=> <AMEE::DataAbstraction::CalculationCollection ... >
 
-  my_calculation.id              #= 28
+    my_calculation.id              #= 28
 
-  my_calculation.db_calculation  #=> <AMEE::Db::Calculation ... >
+    my_calculation.db_calculation  #=> <AMEE::Db::Calculation ... >
 
-  my_calculation.to_hash         #=> { :profile_uid => "EYR758EY36WY",
-                                       :profile_item_uid => "W83URT48DY3W",
-                                       :type => { :value => 'car' },
-                                       :distance => { :value => 1600,
-                                                      :unit => <Quantify::Unit::SI> },
-                                       :co2 => { :value => 234.1,
-                                                 :unit => <Quantify::Unit::NonSI> }}
+    my_calculation.to_hash         #=> { :profile_uid => "EYR758EY36WY",
+                                         :profile_item_uid => "W83URT48DY3W",
+                                         :type => { :value => 'car' },
+                                         :distance => { :value => 1600,
+                                                        :unit => <Quantify::Unit::SI> },
+                                         :co2 => { :value => 234.1,
+                                                   :unit => <Quantify::Unit::NonSI> }}
 
-  my_calculation.save            #=> true
+    my_calculation.save            #=> true
 
-  my_calculation.delete          #=> nil
+    my_calculation.delete          #=> nil
 
-n order to use the persistence library, prototype calculations must be held within
+In order to use the persistence library, prototype calculations must be held within
 instances of the AMEE::DataAbstraction::CalculationSet class
